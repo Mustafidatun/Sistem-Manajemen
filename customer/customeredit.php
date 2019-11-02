@@ -75,9 +75,9 @@ if (!empty($_GET['id'])) {
       </div><!-- /.container-fluid -->
   </section>
 
-    <a href="customer.php" class="centerback">Back</a>
     <!-- Main content -->
     <section class="content col-sm-6 centercontent">
+      <a href="customer.php" class="centerback">Back</a>
       <div class="container-fluid">
         <!-- general form elements -->
             <div class="card card-primary">
