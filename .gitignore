@@ -1,0 +1,5 @@
+#ignore library
+pdfmake/
+PHPExcel/
+PHPMailer/
+Referensi/
