@@ -130,7 +130,7 @@ $memolist = mysqli_query($connectdb, "SELECT DISTINCT ng_internalmemo.memoid,
                       <td><?php if ($dtmemo['status']>=0 ){echo "<b>OK</b>";}else{echo "<b>Not OK</b>";} ?></td>
                       <td><?php if ($dtmemo['status']>=1 ){echo "<b>OK</b>";}else{echo "<font color=red><b>Not OK</b></font>";} ?></td>
                       <td><?php if ($dtmemo['status']>=2 ){echo "<b>OK</b>";}else{echo "<font color=red><b>Not OK</b></font>";} ?></td>
-                      <td align="left"><?php echo number_format($dtmemo['total']); ?></td>
+                      <td align="left"><?php echo "Rp. " . number_format($dtmemo['total']); ?></td>
                       <td><button id="send" type="submit" class="btn btn-block btn-primary btn-sm" onclick="location.href = 'imemodetail.php?memoid=<?php echo $dtmemo['memoid']; ?>&vendor=<?php echo $dtmemo['vendor']; ?>&date=<?php echo $dtmemo['date']; ?>'">Detail</button>
                       </td>
                     </tr>

@@ -188,7 +188,7 @@ $customerinvoicelist = mysqli_query($connectdb, "SELECT ng_customer.id AS custom
                       <td><?php echo $date; ?></td>
                       <td><?php echo $due_date; ?></td>
                       <td><?php echo $paydate; ?></td>
-                      <td><?php echo number_format($ammount); ?></td>
+                      <td><?php echo "Rp. " . number_format($ammount); ?></td>
                       <td><a href="invoice.php?ADJLAsjljsKDSLSJd=<?php echo $invoice;?>&ZFhObGNtNWhiV1U9=<?php echo $dtcustomerinvoice['username'];?>&SLSJdKASdaE67daSE21=<?php echo substr($ammount, -3);?>" class="btn btn-info btn-xs" target="_blank">show</a>
                       <a href="cinvpaid.php?ADJLAsjljsKDSLSJd=<?php echo $invoice;?>" class="btn btn-success btn-xs" >paid</a>
             </td>

@@ -98,12 +98,12 @@ $ng_paket = mysqli_query($connectdb, "SELECT * FROM ng_paket");
                     <tr>
                       <td><?php echo $data['paket']; ?></td>
                       <td><?php echo $data['description']; ?></td>
-                      <td><?php echo number_format($data['price1']); ?></td>
-                      <td><?php echo number_format($data['price2']); ?></td>
-                      <td><?php echo number_format($data['price3']); ?></td>
-                      <td><?php echo number_format($data['price4']); ?></td>
-                      <td><?php echo number_format($data['price5']); ?></td>
-                      <td><?php echo number_format($data['price6']); ?></td>
+                      <td><?php echo "Rp." . number_format($data['price1']); ?></td>
+                      <td><?php echo "Rp." . number_format($data['price2']); ?></td>
+                      <td><?php echo "Rp." . number_format($data['price3']); ?></td>
+                      <td><?php echo "Rp." . number_format($data['price4']); ?></td>
+                      <td><?php echo "Rp." . number_format($data['price5']); ?></td>
+                      <td><?php echo "Rp." . number_format($data['price6']); ?></td>
                     </tr>
 
                   <?php } ?>

@@ -97,7 +97,7 @@ $ng_equipmasterlist = mysqli_query($connectdb, "SELECT ng_equipmaster.*,
                     <tr>
                       <td><?php echo $data['merk']; ?></td>
                       <td><?php echo $data['type']; ?></td>
-                      <td align="right"><?php echo number_format($data['price']); ?></td>
+                      <td align="right"><?php echo "Rp. " . number_format($data['price']); ?></td>
                       <td><?php echo $data['vol']; ?></td>
                       <td><?php echo $data['vendor']; ?></td>
                     </tr>
