@@ -143,7 +143,7 @@
                                         </label></td>
                     <td><span >:</span></td>
                     <td class="col-md-6 col-sm-6">
-                    <input type="text" id="price1" name="price1" placeholder="500000" >
+                    <input type="number" id="price1" name="price1" placeholder="500000" required>
                     </td>
                     <tr>
                     <td class="col-md-5 col-sm-5">
@@ -151,7 +151,7 @@
                                         </label></td>
                     <td><span >:</span></td>
                     <td class="col-md-6 col-sm-6">
-                    <input type="text" id="price2" name="price2" placeholder="300000" >
+                    <input type="number" id="price2" name="price2" placeholder="300000" required>
                     </td>
                     <tr>
                     <td class="col-md-5 col-sm-5">
@@ -159,7 +159,7 @@
                                         </label></td>
                     <td><span >:</span></td>
                     <td class="col-md-6 col-sm-6">
-                    <input type="text" id="price3" name="price3" placeholder="250000" >
+                    <input type="number" id="price3" name="price3" placeholder="250000" required>
                     </td>
                     </tr>
                     </table>
