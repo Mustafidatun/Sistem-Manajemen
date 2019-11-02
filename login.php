@@ -8,13 +8,12 @@
     $myusername = $_POST['username'];
     $mypassword = $_POST['password']; 
 
-    $sql = "SELECT id, level, managerid FROM ng_userlogin WHERE username = \"$myusername\" and password = \"$mypassword\" and level IN (0,1,2,5,10,11)";
+    $sql = "SELECT id, level, userid FROM ng_userlogin WHERE username = \"$myusername\" and password = \"$mypassword\" and level IN (0,1,2,10,11)";
 
       //level user
       // 0 SuperManager
       // 1 Manager
       // 2 Sub Manager
-      // 5 FieldTech
       // 10 Finance
       // 11 Purchasing
 
@@ -28,11 +27,11 @@
       $_SESSION['login_user'] = $myusername;
       $_SESSION['last_activity'] = time();
       $_SESSION['level'] = $row['level'];
-      $_SESSION['userid'] = $row['id'];
-      $_SESSION['managerid'] = $row['managerid'];
+      $_SESSION['userloginid'] = $row['id'];
+      $_SESSION['userid'] = $row['userid'];
       header("location: index.php");
     }else {
-      $alert = "<font color='red'>Wrong Id</font>";
+      $alert = "<font color='red'>Username dan Password Salah</font>";
     }
    }
 ?>
@@ -41,9 +40,10 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>AdminLTE 3 | Log in</title>
+  <title>Admin CMS</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="images/logo_cms.jpg" type="image/ico" />
 
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.css">
@@ -65,11 +65,11 @@
   <!-- /.login-logo -->
   <div class="card">
     <div class="card-body login-card-body">
-      <p class="login-box-msg">Sign in to start your session</p>
+      <p class="login-box-msg"><?php echo $alert ?></p>
 
       <form action="#" method="post">
         <div class="input-group mb-3">
-          <input type="text" class="form-control" name="username" placeholder="Username">
+          <input type="text" class="form-control" name="username" placeholder="Username" required>
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-envelope"></span>
@@ -77,7 +77,7 @@
           </div>
         </div>
         <div class="input-group mb-3">
-          <input type="password" class="form-control" name="password" placeholder="Password">
+          <input type="password" class="form-control" name="password" placeholder="Password" required>
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-lock"></span>

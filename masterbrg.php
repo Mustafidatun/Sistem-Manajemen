@@ -9,9 +9,10 @@ $ng_vendorlist = mysqli_query($connectdb, "SELECT id, vendor FROM ng_vendor");
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>AdminLTE 3 | General Form Elements</title>
+  <title>Admin CMS</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="images/logo_cms.jpg" type="image/ico" />
 
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.css">
@@ -35,18 +36,11 @@ $ng_vendorlist = mysqli_query($connectdb, "SELECT id, vendor FROM ng_vendor");
      <?php 
         if($_SESSION['level'] == 0){
           include 'include/sidebar_supermanager.php';
-        }else if($_SESSION['level'] == 1){
-          include 'include/sidebar_manager.php';
-        }else if($_SESSION['level'] == 2){
-          include 'include/sidebar_submanager.php';
-        }else if($_SESSION['level'] == 5){
-          include './include/sidebar_fieldtec.php';
-        }else if($_SESSION['level'] == 10){
-          include './include/sidebar_finance.php';
         }else if($_SESSION['level'] == 11){
           include './include/sidebar_purchase.php';
-        }else if($_SESSION['level'] == ""){
-          include 'page_404.html'; 
+        }else if($_SESSION['level'] == "" || $_SESSION['level'] == 1 || $_SESSION['level'] == 2 || 
+          $_SESSION['level'] == 10){
+          include 'include/page_404.html'; 
         }
       ?>
   <!-- /.sidebar -->
@@ -58,12 +52,12 @@ $ng_vendorlist = mysqli_query($connectdb, "SELECT id, vendor FROM ng_vendor");
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Manager Registration</h1>
+            <h1>Create Master Barang</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Manager Registration</li>
+              <li class="breadcrumb-item"><a href="index.php">Home</a></li>
+              <li class="breadcrumb-item active">Master Barang</li>
             </ol>
           </div>
         </div>
@@ -76,7 +70,7 @@ $ng_vendorlist = mysqli_query($connectdb, "SELECT id, vendor FROM ng_vendor");
             <!-- general form elements -->
             <div class="card card-primary">
               <div class="card-header">
-                <h3 class="card-title">Form</h3>
+                <h3 class="card-title">Form Master Barang</h3>
               </div>
               <!-- /.card-header -->
               <!-- form start -->
@@ -84,15 +78,15 @@ $ng_vendorlist = mysqli_query($connectdb, "SELECT id, vendor FROM ng_vendor");
                 <div class="card-body">
                   <div class="form-group">
                     <label for="inputMerk">Merk</label>
-                    <input type="text" class="form-control" id="inputMerk" placeholder="Input Merk Equipment" name="merk">
+                    <input type="text" class="form-control" id="inputMerk" placeholder="Input Merk Equipment" name="merk" required>
                   </div>
                   <div class="form-group">
                     <label for="inputType">Type</label>
-                    <input type="text" class="form-control" id="inputType" placeholder="Input Type Equipment" name="type">
+                    <input type="text" class="form-control" id="inputType" placeholder="Input Type Equipment" name="type" required>
                   </div>
                   <div class="form-group">
                     <label for="inputPrice">Price</label>
-                    <input type="number" class="form-control" id="inputPrice" placeholder="Input Price ex.1000000" name="price">
+                    <input type="number" class="form-control" id="inputPrice" placeholder="Input Price ex.1000000" name="price" required>
                   </div>
                    <div class="form-group">
                     <label>Vol</label>
@@ -115,7 +109,7 @@ $ng_vendorlist = mysqli_query($connectdb, "SELECT id, vendor FROM ng_vendor");
                   </div>
                   <div class="form-group">
                     <label>Vendor</label>
-                    <select class="form-control" name="vendor">
+                    <select class="form-control" name="vendor" required>
                       <option value=''>Pilih</option>
                       <?php 
                         while ($dtvendor = mysqli_fetch_array($ng_vendorlist)){

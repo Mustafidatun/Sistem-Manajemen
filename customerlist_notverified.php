@@ -2,8 +2,8 @@
 include "database/koneksi.php";
 include "database/check.php";
 
+$userloginid = $_SESSION['userloginid'];
 $userid = $_SESSION['userid'];
-$managerid = $_SESSION['managerid'];
 
 if($_SESSION['level'] == 0){
   $ng_user_verifikasi = mysqli_query($connectdb, "SELECT firstname, 
@@ -24,8 +24,8 @@ if($_SESSION['level'] == 0){
                                                         ng_customer.active 
                                                   FROM ng_customer 
                                                   INNER JOIN ng_userlogin ON ng_userlogin.id = ng_customer.userid
-                                                  INNER JOIN ng_manager ON ng_manager.id = ng_userlogin.managerid
-                                                  WHERE ng_userlogin.id = \"$userid\" AND ng_customer.active = 0
+                                                  INNER JOIN ng_user ON ng_user.id = ng_userlogin.userid
+                                                  WHERE ng_userlogin.id = \"$userloginid\" AND ng_customer.active = 0
                                                  
                                                   UNION
                  
@@ -37,9 +37,9 @@ if($_SESSION['level'] == 0){
                                                         ng_customer.active 
                                                   FROM ng_customer
                                                   INNER JOIN ng_userlogin ON ng_userlogin.id = ng_customer.userid
-                                                  INNER JOIN ng_submanager ON ng_userlogin.managerid = ng_submanager.id 
-                                                  INNER JOIN ng_manager ON ng_submanager.managerid = ng_manager.id
-                                                  WHERE ng_manager.id = \"$userid\" AND ng_customer.active = 0 ");
+                                                  INNER JOIN ng_submanager ON ng_userlogin.userid = ng_submanager.id 
+                                                  INNER JOIN ng_user ON ng_submanager.managerid = ng_user.id
+                                                  WHERE ng_user.id = \"$userloginid\" AND ng_customer.active = 0 ");
 
 }else if($_SESSION['level'] == 2){
   $ng_user_verifikasi = mysqli_query($connectdb, "SELECT ng_customer.firstname, 
@@ -50,8 +50,8 @@ if($_SESSION['level'] == 0){
                                                         ng_customer.active 
                                                   FROM ng_customer 
                                                   INNER JOIN ng_userlogin ON ng_userlogin.id = ng_customer.userid
-                                                  INNER JOIN ng_submanager ON ng_submanager.id = ng_userlogin.managerid
-                                                  WHERE ng_userlogin.id = \"$userid\" AND ng_customer.active = 0");
+                                                  INNER JOIN ng_submanager ON ng_submanager.id = ng_userlogin.userid
+                                                  WHERE ng_userlogin.id = \"$userloginid\" AND ng_customer.active = 0");
 
 }
 ?>
@@ -60,9 +60,10 @@ if($_SESSION['level'] == 0){
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>AdminLTE 3 | DataTables</title>
+  <title>Admin CMS</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="images/logo_cms.jpg" type="image/ico" />
 
 <!-- Font Awesome Icons -->
   <script src="https://kit.fontawesome.com/bd16c6b546.js"></script>
@@ -94,13 +95,7 @@ if($_SESSION['level'] == 0){
           include 'include/sidebar_manager.php';
         }else if($_SESSION['level'] == 2){
           include 'include/sidebar_submanager.php';
-        }else if($_SESSION['level'] == 5){
-          include './include/sidebar_fieldtec.php';
-        }else if($_SESSION['level'] == 10){
-          include './include/sidebar_finance.php';
-        }else if($_SESSION['level'] == 11){
-          include './include/sidebar_purchase.php';
-        }else if($_SESSION['level'] == ""){
+        }else if($_SESSION['level'] == "" || $_SESSION['level'] == 10 || $_SESSION['level'] == 11){
           include 'page_404.html'; 
         }
       ?>
@@ -113,12 +108,12 @@ if($_SESSION['level'] == 0){
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>DataTables</h1>
+            <h1>Customer Not Verified</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">DataTables</li>
+              <li class="breadcrumb-item"><a href="index.php">Home</a></li>
+              <li class="breadcrumb-item active">Customer Not Verified</li>
             </ol>
           </div>
         </div>
@@ -132,9 +127,6 @@ if($_SESSION['level'] == 0){
         <div class="col-12">
 
           <div class="card">
-            <div class="card-header">
-              <h3 class="card-title">DataTable with default features</h3>
-            </div>
             <!-- /.card-header -->
             <div class="card-body">
               <table id="example1" class="table table-bordered table-striped">
@@ -157,11 +149,11 @@ if($_SESSION['level'] == 0){
                     <td><?php echo $dtuser['password']; ?></td>
                     <td><?php echo $dtuser['email']; ?></td>
                     <td><form action="#" method=post novalidate>
-                          <input id="firstname" name="firstname" type="hidden" value="<?php echo $dtuser['firstname']; ?>">
-                          <input id="lastname" name="lastname" type="hidden" value="<?php echo $dtuser['lastname']; ?>">
-                          <input id="username" name="username" type="hidden" value="<?php echo $dtuser['username']; ?>">
-                          <input id="email" name="email" type="hidden" value="<?php echo $dtuser['email']; ?>">       
-                          <button id="send" type="submit" class="btn btn-success">Submit</button>                                    
+                          <input id="firstname" name="firstname" type="hidden" value="<?php echo $dtuser['firstname']; ?>"  required>
+                          <input id="lastname" name="lastname" type="hidden" value="<?php echo $dtuser['lastname']; ?>"  required>
+                          <input id="username" name="username" type="hidden" value="<?php echo $dtuser['username']; ?>"  required>
+                          <input id="email" name="email" type="hidden" value="<?php echo $dtuser['email']; ?>"  required>       
+                          <button id="send" type="submit" class="btn btn-primary btn-sm">Send</button>                                    
                         </form>
                     </td>
                   </tr>
@@ -218,56 +210,57 @@ if($_SESSION['level'] == 0){
 </body>
 </html>
 
-<?php
+<?php 
   if($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    $firstname = $_POST['firstname'];
-    $lastname = $_POST['lastname'];
-    $username = $_POST['username'];
-    $email = $_POST['email'];
-    
-    verifikasiEmail($firstname,$lastname,$username,$email);
-    echo '<script language="javascript">alert("Email has been send")</script>';
-  
+  $firstname = $_POST['firstname'];
+  $lastname = $_POST['lastname'];
+  $username = $_POST['username'];
+  $email = $_POST['email'];
+  verifikasiEmail($firstname,$lastname,$username,$email);
+  echo '<script language="javascript">alert("Email has been send")</script>';
+
   }
-  
+
   //verifikasi Email
   function verifikasiEmail($firstname,$lastname,$username,$email){
-    
-    require_once('PHPMailer/class.phpmailer.php'); //menginclude librari phpmailer
 
-    $encryp_username  = base64_encode($username);
-    $mail             = new PHPMailer();
-    $body             = 
-            "<body style='margin: 10px;'>
-                  <div style='width: 640px; font-family: Helvetica, sans-serif; font-size: 13px; padding:10px; line-height:150%; border:#eaeaea solid 10px;'>
-                    <br>
-                    <strong>Terima Kasih Telah Mendaftar</strong><br>
-                    <b>Nama Anda : </b>".$firstname." ".$lastname."<br>
-                    <b>Email : </b>".$email."<br>
-                    <b>URL Konfirmasi : </b><a href='localhost/SI_PKL/confirmemail.php?username=".$encryp_username."'>disini</a><br>
-                    <br>
-                  </div>
-            </body>";
-    // $body             =  preg_replace_callback("/([^A-Za-z0-9!*+\/ -])/e",'',$body);
-    $mail->IsSMTP();  // menggunakan SMTP
-    $mail->SMTPDebug  = 1;   // mengaktifkan debug SMTP
-    $mail->SMTPSecure = 'tls'; 
-    $mail->SMTPAuth   = true;   // mengaktifkan Autentifikasi SMTP
-    $mail->Host   = 'smtp.gmail.com'; // host sesuaikan dengan hosting mail anda
-    $mail->Port       = 587;  // post gunakan port 25
-    $mail->Username   = "admproduction96@gmail.com"; // username email akun
-    $mail->Password   = "admin2019.";        // password akun
+  require_once('PHPMailer/class.phpmailer.php'); //menginclude librari phpmailer
 
-    $mail->SetFrom('admproduction96@gmail.com', 'Verifikasi Email');
+  $encryp_username  = base64_encode($username);
+  $mail             = new PHPMailer();
+  $body             = 
+  "<body style='margin: 10px;'>
+          <div style='width: 640px; font-family: Helvetica, sans-serif; font-size: 13px; padding:10px; line-height:150%; border:#eaeaea solid 10px;'>
+            <br>
+            <b>Kepada Yth. ".$firstname." ".$lastname." ,</b> 
+            <p>Kami informasikan untuk registrasi layanan anda sudah berhasil.</p>
+            <p><b>Detail Layanan</b></p>
+            <p><b>Registered Name</b> : ".$firstname." ".$lastname." </p>
+            <p><b>Registered Email</b> : ".$email."</p>
+            <p>Silakan konfirmasi email anda dengan klik link di bawah : </p>
+            <p align='center'><a href='http://localhost/adminCMS/confirmemail?username=".$encryp_username."' class='button-a' target='_blank' ><span><b>Konfimasi Email Sekarang</b></span></a></p>
+            <br>
+          </div>
+    </body>";
+  $mail->IsSMTP(); 	// menggunakan SMTP
+  $mail->SMTPDebug  = 1;   // mengaktifkan debug SMTP
+  $mail->SMTPSecure = 'tls'; 
+  $mail->SMTPAuth   = true;   // mengaktifkan Autentifikasi SMTP
+  $mail->Host 	= 'smtp.gmail.com'; // host sesuaikan dengan hosting mail anda
+  $mail->Port       = 587;  // post gunakan port 25
+  $mail->Username   = "mustafidatunnashihah@gmail.com"; // username email akun
+  $mail->Password   = "fida2012.";        // password akun
+
+  $mail->SetFrom('mustafidatunnashihah@gmail.com', 'PT. Citra Media Solusindo');
 
 
-    $mail->Subject    = "Verifikasi Email";
-    $mail->MsgHTML($body);
+  $mail->Subject    = "Aktivasi Email User";
+  $mail->MsgHTML($body);
 
-    $address = $email; //email tujuan
-    $mail->AddAddress($address, "Hello ".$firstname." ".$lastname);
-    $mail->Send();
+  $address = $email; //email tujuan
+  $mail->AddAddress($address, "Hello ".$firstname." ".$lastname);
+  $mail->Send();
   }
-  //end verifikasi Email
-  ?>
+//end verifikasi Email
+?>

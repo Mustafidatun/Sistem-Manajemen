@@ -14,16 +14,16 @@
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
           <li class="nav-item">
-            <a href="index.html" class="nav-link active">
+            <a href="index.php" class="nav-link active">
               <i class="nav-icon fas fa-home"></i>
               <p>
                 Dashboard
               </p>
             </a>
           </li>
-          <li class="nav-item has-treeview">
+         <li class="nav-item has-treeview">
             <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-user"></i>
+              <i class="nav-icon fas fa-users"></i>
               <p>
                  Customer
                 <i class="right fas fa-angle-left"></i>
@@ -45,7 +45,24 @@
               <li class="nav-item">
                 <a href="customerreg.php" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Customer Registration</p>
+                  <p>Create Customer</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-item has-treeview">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-cubes"></i>
+              <p>
+                 Paket
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="paketlist.php" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Paket List</p>
                 </a>
               </li>
             </ul>

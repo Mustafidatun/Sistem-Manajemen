@@ -1,6 +1,6 @@
 <?php
 header("Content-Type: application/json; charset=UTF-8");
-include "koneksi.php";
+include "database/koneksi.php";
 
 // Deklarasi variable keyword.
 $type = $_GET["query"];

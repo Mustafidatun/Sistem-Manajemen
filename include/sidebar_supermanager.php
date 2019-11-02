@@ -7,7 +7,7 @@
     </a>
 
     <!-- Sidebar -->
-    <div class="sidebar">
+    <div class="sidebar" id="navId">
 
       <!-- Sidebar Menu -->
       <nav class="mt-2">
@@ -15,7 +15,7 @@
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
           <li class="nav-item">
-            <a href="index.html" class="nav-link active">
+            <a href="index.php" class="nav-link">
               <i class="nav-icon fas fa-home"></i>
               <p>
                 Dashboard
@@ -26,7 +26,7 @@
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-user"></i>
               <p>
-                 Manage User
+                 User
                 <i class="right fas fa-angle-left"></i>
               </p>
             </a>
@@ -34,13 +34,13 @@
               <li class="nav-item">
                 <a href="manageuserlist.php" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Manager List</p>
+                  <p>User List</p>
                 </a>
               </li>
               <li class="nav-item">
                 <a href="manageuserreg.php" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Manage User Registration</p>
+                  <p>Create User</p>
                 </a>
               </li>
               <li class="nav-item">
@@ -53,7 +53,7 @@
           </li>
           <li class="nav-item has-treeview">
             <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-user"></i>
+              <i class="nav-icon fas fa-users"></i>
               <p>
                  Customer
                 <i class="right fas fa-angle-left"></i>
@@ -75,14 +75,14 @@
               <li class="nav-item">
                 <a href="customerreg.php" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Customer Registration</p>
+                  <p>Create Customer</p>
                 </a>
               </li>
             </ul>
           </li>
           <li class="nav-item has-treeview">
             <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-tachometer-alt"></i>
+              <i class="nav-icon fas fa-network-wired"></i>
               <p>
                  Node
                 <i class="right fas fa-angle-left"></i>
@@ -98,27 +98,14 @@
                <li class="nav-item">
                 <a href="nodereg.php" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Node Registration</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="poplist.php" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Pop List</p>
-                </a>
-              </li>
-              </li>
-               <li class="nav-item">
-                <a href="popreg.php" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Pop Registration</p>
+                  <p>Create Node</p>
                 </a>
               </li>
             </ul>
           </li>
           <li class="nav-item has-treeview">
             <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-tachometer-alt"></i>
+              <i class="nav-icon fas fa-indent"></i>
               <p>
                  Pool
                 <i class="right fas fa-angle-left"></i>
@@ -140,14 +127,14 @@
               <li class="nav-item">
                 <a href="poolreg.php" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Pool Registration</p>
+                  <p>Create Pool</p>
                 </a>
               </li>
             </ul>
           </li>
           <li class="nav-item has-treeview">
             <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-tachometer-alt"></i>
+              <i class="nav-icon fas fa-cubes"></i>
               <p>
                  Paket
                 <i class="right fas fa-angle-left"></i>
@@ -163,49 +150,23 @@
               <li class="nav-item">
                 <a href="paket_skema.php" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Paket Registration</p>
+                  <p>Create Paket</p>
                 </a>
               </li>
             </ul>
           </li>
           <li class="nav-item has-treeview">
-            <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-tachometer-alt"></i>
+            <a href="imemolist.php" class="nav-link">
+              <i class="nav-icon fas fa-sticky-note"></i>
               <p>
                  Internal Memo
                 <i class="right fas fa-angle-left"></i>
               </p>
             </a>
-            <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="imemolist.php" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Internal Memo List</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="imemomanager.php" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Internal Memo Manager List</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="imemofinance.php" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Internal Memo Finance List</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="imemo.php" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Internal Memo Registration</p>
-                </a>
-              </li>
-            </ul>
           </li>
           <li class="nav-item has-treeview">
             <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-tachometer-alt"></i>
+              <i class="nav-icon fas fa-file-invoice-dollar"></i>
               <p>
                  Finance
                 <i class="right fas fa-angle-left"></i>
@@ -228,7 +189,7 @@
           </li>
           <li class="nav-item has-treeview">
             <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-tachometer-alt"></i>
+              <i class="nav-icon fas fa-object-ungroup"></i>
               <p>
                  Vendor
                 <i class="right fas fa-angle-left"></i>
@@ -244,16 +205,16 @@
               <li class="nav-item">
                 <a href="vendorreg.php" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Vendor Registration</p>
+                  <p>Create Vendor</p>
                 </a>
               </li>
             </ul>
           </li>
           <li class="nav-item has-treeview">
             <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-tachometer-alt"></i>
+              <i class="nav-icon fas fa-box-open"></i>
               <p>
-                 Master Equipment
+                 Master Barang
                 <i class="right fas fa-angle-left"></i>
               </p>
             </a>
@@ -261,13 +222,13 @@
               <li class="nav-item">
                 <a href="masterbrglist.php" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Master Equipment List</p>
+                  <p>Master Barang List</p>
                 </a>
               </li>
               <li class="nav-item">
                 <a href="masterbrg.php" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Master Equipment Registration</p>
+                  <p>Create Master Barang</p>
                 </a>
               </li>
             </ul>

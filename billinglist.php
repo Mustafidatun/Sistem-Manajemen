@@ -18,9 +18,10 @@ $start_billing = mysqli_query($connectdb, "SELECT ng_customer.id,
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>AdminLTE 3 | DataTables</title>
+  <title>Admin CMS</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="images/logo_cms.jpg" type="image/ico" />
 
 <!-- Font Awesome Icons -->
   <script src="https://kit.fontawesome.com/bd16c6b546.js"></script>
@@ -36,6 +37,8 @@ $start_billing = mysqli_query($connectdb, "SELECT ng_customer.id,
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
   <!-- DataTables -->
   <link rel="stylesheet" href="https://cdn.datatables.net/1.10.18/css/dataTables.bootstrap4.min.css">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.css">
   
 </head>
 <body class="hold-transition sidebar-mini">
@@ -46,12 +49,19 @@ $start_billing = mysqli_query($connectdb, "SELECT ng_customer.id,
 
   <!-- Main Sidebar Container -->
      <?php 
-      include 'include/sidebar_supermanager.php';
-      // include 'include/sidebar_manager.php';
-      // include 'include/sidebar_submanager.php';
-      // include './include/sidebar_purchase.php';
-      // include './include/sidebar_finance.php';
-      // include './include/sidebar_fieldtec.php';
+        if($_SESSION['level'] == 0){
+          include 'include/sidebar_supermanager.php';
+        }else if($_SESSION['level'] == 1){
+          include 'include/sidebar_manager.php';
+        }else if($_SESSION['level'] == 2){
+          include 'include/sidebar_submanager.php';
+        }else if($_SESSION['level'] == 10){
+          include './include/sidebar_finance.php';
+        }else if($_SESSION['level'] == 11){
+          include './include/sidebar_purchase.php';
+        }else if($_SESSION['level'] == ""){
+          include 'page_404.html'; 
+        }
       ?>
   <!-- /.sidebar -->
 
@@ -62,12 +72,12 @@ $start_billing = mysqli_query($connectdb, "SELECT ng_customer.id,
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>DataTables</h1>
+            <h1>Billing List</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">DataTables</li>
+              <li class="breadcrumb-item"><a href="index.php">Home</a></li>
+              <li class="breadcrumb-item active">Billing List</li>
             </ol>
           </div>
         </div>
@@ -81,9 +91,6 @@ $start_billing = mysqli_query($connectdb, "SELECT ng_customer.id,
         <div class="col-12">
 
           <div class="card">
-            <div class="card-header">
-              <h3 class="card-title">DataTable with default features</h3>
-            </div>
             <!-- /.card-header -->
             <div class="card-body">
               <table id="example1" class="table table-bordered table-striped">
@@ -108,14 +115,47 @@ $start_billing = mysqli_query($connectdb, "SELECT ng_customer.id,
                                       echo date('d F Y', strtotime($dtbilling['start_billing']));
                                   }else{
                             ?>
-                                      <form action="" method=post novalidate>
-                                        <input id="customerid" name="customerid" type="hidden" value="<?php echo $dtbilling['id']; ?>">
-                                        <input id="register_date" name="register_date" type="hidden" value="<?php echo $dtbilling['register_date']; ?>">
-                                        <input id="start_billing" name="start_billing" placeholder="Input your start billing" required="required" type="date" value="<?php echo date('Y-m-d'); ?>">           
-                                        <button id="send" type="submit">Submit</button>                                    
-                                      </form>
+                            <!-- Button trigger modal -->
+                              <button type="button" class="btn btn-block btn-primary btn-sm" data-toggle="modal" data-target="#myModal">
+                                Billing
+                              </button>
 
-                              <?php  } ?>
+                              <!-- Modal -->
+                              <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                  <div class="modal-content">
+                                    <div class="modal-header">
+                                      <h4 class="modal-title" id="myModalLabel">Start Billing</h4>
+                                      <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>      
+                                    </div>
+                                    <form action="" method=post>
+                                      <div class="modal-body">
+                                         <input id="customerid" name="customerid" type="hidden" value="<?php echo $dtbilling['id']; ?>">
+                                        <input id="register_date" name="register_date" type="hidden" value="<?php echo $dtbilling['register_date']; ?>">
+
+                                          <!-- Date -->
+                                          <div class="form-group">
+                                            <label>Date</label>
+
+                                            <div class="input-group date">
+                                              <div class="input-group-addon">
+                                                <i class="fa fa-calendar"></i>
+                                              </div>
+                                              <input type="text" class="form-control pull-right" id="datepicker" name="start_billing" placeholder="Input your start billing" type="date" required>
+                                            </div>
+                                            <!-- /.input group -->
+                                          </div>
+                                      </div>
+                                      <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                       <button id="send" type="submit" class="btn btn-primary">Save</button>
+                                      </div>
+                                    </form>
+                                  </div>
+                                </div>
+                              </div>
+                              <!-- End Modal -->
+                            <?php  } ?>
                         </td>
                       </tr>
 
@@ -153,19 +193,23 @@ $start_billing = mysqli_query($connectdb, "SELECT ng_customer.id,
 <script src="./js/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- AdminLTE -->
 <script src="./js/adminlte.js"></script>
-
+<!-- bootstrap datepicker -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
 <!-- OPTIONAL SCRIPTS -->
 <script src="./js/demo.js"></script>
 <script>
   $(function () {
     $("#example1").DataTable();
-    $('#example2').DataTable({
+    $('#example2').DataTable({  
       "paging": true,
       "lengthChange": false,
       "searching": false,
       "ordering": true,
       "info": true,
       "autoWidth": false,
+    });
+    $('#datepicker').datepicker({
+      "autoclose": true
     });
   });
 </script>

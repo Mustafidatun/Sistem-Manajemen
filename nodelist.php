@@ -11,16 +11,17 @@ $node = mysqli_query($connectdb, "SELECT ng_node.nodeid,
                                         ng_node.type 
                                   FROM ng_node
                                   INNER JOIN ng_kota ON ng_kota.id = ng_node.kota");
-
+  
 ?>
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>AdminLTE 3 | DataTables</title>
+  <title>Admin CMS</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="images/logo_cms.jpg" type="image/ico" />
 
 <!-- Font Awesome Icons -->
   <script src="https://kit.fontawesome.com/bd16c6b546.js"></script>
@@ -50,15 +51,7 @@ $node = mysqli_query($connectdb, "SELECT ng_node.nodeid,
           include 'include/sidebar_supermanager.php';
         }else if($_SESSION['level'] == 1){
           include 'include/sidebar_manager.php';
-        }else if($_SESSION['level'] == 2){
-          include 'include/sidebar_submanager.php';
-        }else if($_SESSION['level'] == 5){
-          include './include/sidebar_fieldtec.php';
-        }else if($_SESSION['level'] == 10){
-          include './include/sidebar_finance.php';
-        }else if($_SESSION['level'] == 11){
-          include './include/sidebar_purchase.php';
-        }else if($_SESSION['level'] == ""){
+        }else if($_SESSION['level'] == "" || $_SESSION['level'] == 2 || $_SESSION['level'] == 10 || $_SESSION['level'] == 11){
           include 'page_404.html'; 
         }
       ?>
@@ -71,12 +64,12 @@ $node = mysqli_query($connectdb, "SELECT ng_node.nodeid,
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>DataTables</h1>
+            <h1>Node List</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">DataTables</li>
+              <li class="breadcrumb-item"><a href="index.php">Home</a></li>
+              <li class="breadcrumb-item active">Node List</li>
             </ol>
           </div>
         </div>
@@ -90,9 +83,6 @@ $node = mysqli_query($connectdb, "SELECT ng_node.nodeid,
         <div class="col-12">
 
           <div class="card">
-            <div class="card-header">
-              <h3 class="card-title">DataTable with default features</h3>
-            </div>
             <!-- /.card-header -->
             <div class="card-body">
               <table id="example1" class="table table-bordered table-striped">
@@ -121,7 +111,7 @@ $node = mysqli_query($connectdb, "SELECT ng_node.nodeid,
                   <td><?php echo $dtnode['type']; ?></td>
                   <?php if($_SESSION['level'] <> 5 ){ ?>
                     <td>
-                        <a href="nodeedit.php?id=<?php echo $dtnode['nodeid']; ?>">Edit </a>
+                        <a class="btn btn-primary btn-sm" href="nodeedit.php?id=<?php echo $dtnode['nodeid']; ?>">Edit </a>
                     </td>
                   <?php }?>
                 </tr>

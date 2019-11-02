@@ -2,3 +2,35 @@
 	width: 30px;
 	height: 30px;
 }
+
+/*.active, .nav-link:hover{
+	background-color: red;
+  	color: white;
+}*/
+
+.center{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bluecolor{
+  background-color: #007bff;
+  color: white;
+}
+
+section ol li a{
+	color: white;
+}
+
+.centercontent{
+  align-content: middle;
+  padding: 0 auto;
+  margin: 30px auto;
+}
+ 
+.centerback{
+  align-content: center;  
+  padding: 0 auto;
+  margin: 0 auto;
+}

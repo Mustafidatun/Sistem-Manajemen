@@ -2,24 +2,24 @@
 include "database/koneksi.php";
 include "database/check.php";
 
-$managerid = $_SESSION['managerid'];
+$userid = $_SESSION['userid'];
 if($_SESSION['level'] == 1){
   $submanager = mysqli_query($connectdb, "SELECT ng_submanager.id,
                                                   ng_submanager.username AS username_submanager, 
                                                   ng_submanager.password, 
                                                   ng_submanager.email 
                                           FROM ng_submanager
-                                          INNER JOIN ng_manager ON ng_manager.id = ng_submanager.managerid
-                                          WHERE ng_manager.id = \"$managerid\"");
+                                          INNER JOIN ng_user ON ng_user.id = ng_submanager.managerid
+                                          WHERE ng_user.id = \"$userid\"");
   
 }else if($_SESSION['level'] == 0){
   $submanager = mysqli_query($connectdb, "SELECT ng_submanager.id,
                                                   ng_submanager.username AS username_submanager, 
                                                   ng_submanager.password, 
                                                   ng_submanager.email,
-                                                  ng_manager.username AS username_manager
+                                                  ng_user.username AS username_manager
                                           FROM ng_submanager
-                                          INNER JOIN ng_manager ON ng_manager.id = ng_submanager.managerid"
+                                          INNER JOIN ng_user ON ng_user.id = ng_submanager.managerid"
                                 );
 }
 ?>
@@ -28,9 +28,10 @@ if($_SESSION['level'] == 1){
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>AdminLTE 3 | DataTables</title>
+  <title>Admin CMS</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="images/logo_cms.jpg" type="image/ico" />
 
 <!-- Font Awesome Icons -->
   <script src="https://kit.fontawesome.com/bd16c6b546.js"></script>
@@ -60,15 +61,8 @@ if($_SESSION['level'] == 1){
           include 'include/sidebar_supermanager.php';
         }else if($_SESSION['level'] == 1){
           include 'include/sidebar_manager.php';
-        }else if($_SESSION['level'] == 2){
-          include 'include/sidebar_submanager.php';
-        }else if($_SESSION['level'] == 5){
-          include './include/sidebar_fieldtec.php';
-        }else if($_SESSION['level'] == 10){
-          include './include/sidebar_finance.php';
-        }else if($_SESSION['level'] == 11){
-          include './include/sidebar_purchase.php';
-        }else if($_SESSION['level'] == ""){
+        }else if($_SESSION['level'] == "" || $_SESSION['level'] == 2 ||
+                $_SESSION['level'] == 10 || $_SESSION['level'] == 11){
           include 'page_404.html'; 
         }
       ?>
@@ -81,12 +75,12 @@ if($_SESSION['level'] == 1){
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>DataTables</h1>
+            <h1>Sub Manager List</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">DataTables</li>
+              <li class="breadcrumb-item"><a href="index.php">Home</a></li>
+              <li class="breadcrumb-item active">Sub Manager List</li>
             </ol>
           </div>
         </div>
@@ -99,9 +93,6 @@ if($_SESSION['level'] == 1){
         <div class="col-12">
 
           <div class="card">
-            <div class="card-header">
-              <h3 class="card-title">DataTable with default features</h3>
-            </div>
             <!-- /.card-header -->
             <div class="card-body">
               <table id="example1" class="table table-bordered table-striped">
@@ -117,10 +108,20 @@ if($_SESSION['level'] == 1){
                 </tr>
                 </thead>
                 <tbody>
-                  <?php while ($dtsubmanager = mysqli_fetch_assoc($submanager)){?>
+                  <?php while ($dtsubmanager = mysqli_fetch_assoc($submanager)){
+                    //password
+                    $countpass = strlen(substr($dtsubmanager['password'],0,-3));
+                    $replacepass = '';
+                    for($i = 0; $i < $countpass; $i++){
+                      $replacepass .= 'x';
+                    }
+                    $password = str_replace(substr($dtsubmanager['password'],0,-3), $replacepass ,$dtsubmanager['password']);
+                    //end password
+                    
+                    ?>
                   <tr>
                     <td><?php echo $dtsubmanager['username_submanager']; ?></td>
-                    <td><?php echo $dtsubmanager['password']; ?></td>
+                    <td><?php echo $password; ?></td>
                     <td><?php echo $dtsubmanager['email']; ?></td>
                     <?php if($_SESSION['level'] == 0){ ?>
                     <td> <?php echo $dtsubmanager['username_manager']; ?></td>
@@ -140,7 +141,7 @@ if($_SESSION['level'] == 1){
                             </div>
                             <form action="" method=post>
                               <div class="modal-body">
-                                  <input id="submanagerid" name="submanagerid" type="hidden" value="<?php echo $dtsubmanager['id']; ?>">
+                                  <input id="submanagerid" name="submanagerid" type="hidden" value="<?php echo $dtsubmanager['id']; ?>" required>
                                   <div class="form-group">
                                     <label>Level User</label>
                                     <select class="form-control" name="level">
@@ -160,7 +161,7 @@ if($_SESSION['level'] == 1){
                         </div>
                       </div>
                       <!-- End Modal -->
-                    </td>
+                  </td>
                   <?php } ?>
                   </tr>
 
@@ -219,7 +220,7 @@ if($_SESSION['level'] == 1){
         if($_SERVER["REQUEST_METHOD"] == "POST") {
             $submanagerid = $_POST['submanagerid'];
             $submanager = mysqli_query($connectdb, "SELECT ng_submanager.*, ng_userlogin.id AS userloginid FROM ng_submanager 
-                                                    INNER JOIN ng_userlogin ON ng_userlogin.managerid = ng_submanager.id
+                                                    INNER JOIN ng_userlogin ON ng_userlogin.userid = ng_submanager.id
                                                     WHERE ng_submanager.id = \"$submanagerid\"");
             $showsubmanager = mysqli_fetch_assoc($submanager);
             $userloginid = $showsubmanager['userloginid'];

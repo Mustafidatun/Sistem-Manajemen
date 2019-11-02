@@ -1,7 +1,7 @@
 <?php
-header("Content-Type: application/json; charset=UTF-8");
 include "database/koneksi.php";
 
+//selection pd customer
 if (isset($_POST['kota'])) {
    $kota = $_POST['kota'];
 

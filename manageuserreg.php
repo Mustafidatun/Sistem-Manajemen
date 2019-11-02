@@ -21,9 +21,10 @@ function rdpass($n) {
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>AdminLTE 3 | General Form Elements</title>
+  <title>Admin CMS</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="images/logo_cms.jpg" type="image/ico" />
 
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.css">
@@ -44,20 +45,11 @@ function rdpass($n) {
   <!-- /.navbar -->
 
   <!-- Main Sidebar Container -->
-     <?php 
+  <?php 
         if($_SESSION['level'] == 0){
           include 'include/sidebar_supermanager.php';
-        }else if($_SESSION['level'] == 1){
-          include 'include/sidebar_manager.php';
-        }else if($_SESSION['level'] == 2){
-          include 'include/sidebar_submanager.php';
-        }else if($_SESSION['level'] == 5){
-          include './include/sidebar_fieldtec.php';
-        }else if($_SESSION['level'] == 10){
-          include './include/sidebar_finance.php';
-        }else if($_SESSION['level'] == 11){
-          include './include/sidebar_purchase.php';
-        }else if($_SESSION['level'] == ""){
+        }else if($_SESSION['level'] == "" || $_SESSION['level'] == 1 || $_SESSION['level'] == 2 ||
+                $_SESSION['level'] == 10|| $_SESSION['level'] == 11){
           include 'page_404.html'; 
         }
       ?>
@@ -70,12 +62,12 @@ function rdpass($n) {
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Manager Registration</h1>
+            <h1>Create User</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Manager Registration</li>
+              <li class="breadcrumb-item"><a href="index.php">Home</a></li>
+              <li class="breadcrumb-item active">Create User</li>
             </ol>
           </div>
         </div>
@@ -88,7 +80,7 @@ function rdpass($n) {
             <!-- general form elements -->
             <div class="card card-primary">
               <div class="card-header">
-                <h3 class="card-title">Form</h3>
+                <h3 class="card-title">Form User</h3>
               </div>
               <!-- /.card-header -->
               <!-- form start -->
@@ -96,28 +88,26 @@ function rdpass($n) {
                 <div class="card-body">
                   <div class="form-group">
                     <label for="inputUsername">Username</label>
-                    <input type="text" class="form-control" id="inputUsername" placeholder="Input Username" name="username">
+                    <input type="text" class="form-control" id="inputUsername" placeholder="Input Username" name="username" required>
                   </div>
                   <div class="form-group">
                     <label for="inputEmail">Email Address</label>
-                    <input type="email" class="form-control" id="inputEmail" placeholder="Input email" name="email">
+                    <input type="email" class="form-control" id="inputEmail" placeholder="Input email" name="email" required>
                   </div>
                   <div class="form-group">
                     <label>Level User</label>
-                    <select class="form-control" name="level">
+                    <select class="form-control" name="level" required>
                       <option value=''>Pilih</option>
                       <option value='1'>Manager</option>
                       <option value='10'>Finance</option>
                       <option value='11'>Purchasing</option>
-                      <option value='12'>Payment Point</option>
-                      <option value='5'>Field Tech</option>
                     </select>
                   </div>
                   <div class="form-group">
                     <label for="inputFile">Upload Foto Profil</label>
                     <div class="input-group">
                       <div class="custom-file">
-                        <input type="file" class="custom-file-input" id="inputFile" name="image-file">
+                        <input type="file" class="custom-file-input" id="inputFile" name="image-file" required>
                         <label class="custom-file-label" for="inputFile">Choose file</label>
                       </div>
                     </div>
@@ -128,9 +118,6 @@ function rdpass($n) {
                   <button type="submit" class="btn btn-primary">Submit</button>
                   <button type="reset" class="btn btn-default float-right">Cancel</button>
                 </div>
-              </form>
-            </div>
-            <!-- /.card -->
 
                </form>
               </div>
@@ -149,6 +136,7 @@ function rdpass($n) {
 <!-- jQuery -->
 <script src="https://kit.fontawesome.com/bd16c6b546.js"></script>
 <script src="./js/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js"></script>
 <!-- Bootstrap -->
 <script src="./js/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- AdminLTE -->
@@ -156,6 +144,11 @@ function rdpass($n) {
 
 <!-- OPTIONAL SCRIPTS -->
 <script src="./js/demo.js"></script>
+<script>
+  $(document).ready(function () {
+  bsCustomFileInput.init()
+  })
+</script>
 </body>
 </html>
 
@@ -175,7 +168,7 @@ function rdpass($n) {
       $path = "foto/$name_photo";
 
     
-      $usercheck = mysqli_query($connectdb, "SELECT username, email FROM ng_manager WHERE username =\"$username\" OR email =\"$email\"");
+      $usercheck = mysqli_query($connectdb, "SELECT username, email FROM ng_user WHERE username =\"$username\" OR email =\"$email\"");
 
             if(mysqli_fetch_row($usercheck) == NULL ){
                 if (!empty($_FILES['image-file']['name'])) {
@@ -183,14 +176,14 @@ function rdpass($n) {
                             if($size_photo <= 10000000){
                                 if(move_uploaded_file($temp_photo,$path)){
 
-                      $user = mysqli_query($connectdb, "INSERT INTO ng_manager (username,password,email,foto) VALUES (\"$username\" ,\"$password\", \"$email\", \"$name_photo\")");
+                      $user = mysqli_query($connectdb, "INSERT INTO ng_user (username,password,email,foto) VALUES (\"$username\" ,\"$password\", \"$email\", \"$name_photo\")");
                 
-                    $usercheckid = mysqli_query($connectdb, "SELECT id FROM ng_manager WHERE username=\"$username\" AND password=\"$password\" AND email=\"$email\"");
+                    $usercheckid = mysqli_query($connectdb, "SELECT id FROM ng_user WHERE username=\"$username\" AND password=\"$password\" AND email=\"$email\"");
 
                     $getid = mysqli_fetch_assoc($usercheckid);
                     $id = $getid['id'];
 
-                    $ng_userlogin = mysqli_query($connectdb, "INSERT INTO ng_userlogin (username,password,managerid,level) VALUES (\"$username\" ,\"$password\", \"$id\", \"$level\")");
+                    $ng_userlogin = mysqli_query($connectdb, "INSERT INTO ng_userlogin (username,password,userid,level) VALUES (\"$username\" ,\"$password\", \"$id\", \"$level\")");
                                 
                 }else{ //jika gambar gagal diupload
                            echo '<script language="javascript">alert("Foto gagal diupload")</script>';

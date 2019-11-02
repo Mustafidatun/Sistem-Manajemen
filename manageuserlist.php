@@ -2,15 +2,15 @@
 include "database/koneksi.php";
 include "database/check.php";
 
-$ng_manager = mysqli_query($connectdb, "SELECT ng_manager.username, 
-                                                ng_manager.password, 
-                                                ng_manager.email, 
+$ng_user = mysqli_query($connectdb, "SELECT ng_user.username, 
+                                                ng_user.password, 
+                                                ng_user.email, 
                                                 ng_userlogin.level 
-                                        FROM ng_manager 
-                                        INNER JOIN ng_userlogin ON ng_userlogin.managerid = ng_manager.id
+                                        FROM ng_user 
+                                        INNER JOIN ng_userlogin ON ng_userlogin.userid = ng_user.id
                                         ORDER BY ng_userlogin.level ASC");
 
-if(!$ng_manager){
+if(!$ng_user){
     die ("Query Error: ".mysqli_errno($connectdb).
                       " - ".mysqli_error($connectdb));
 }
@@ -21,9 +21,10 @@ if(!$ng_manager){
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>AdminLTE 3 | DataTables</title>
+  <title>Admin CMS</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="images/logo_cms.jpg" type="image/ico" />
 
 <!-- Font Awesome Icons -->
   <script src="https://kit.fontawesome.com/bd16c6b546.js"></script>
@@ -51,17 +52,8 @@ if(!$ng_manager){
      <?php 
         if($_SESSION['level'] == 0){
           include 'include/sidebar_supermanager.php';
-        }else if($_SESSION['level'] == 1){
-          include 'include/sidebar_manager.php';
-        }else if($_SESSION['level'] == 2){
-          include 'include/sidebar_submanager.php';
-        }else if($_SESSION['level'] == 5){
-          include './include/sidebar_fieldtec.php';
-        }else if($_SESSION['level'] == 10){
-          include './include/sidebar_finance.php';
-        }else if($_SESSION['level'] == 11){
-          include './include/sidebar_purchase.php';
-        }else if($_SESSION['level'] == ""){
+        }else if($_SESSION['level'] == "" || $_SESSION['level'] == 1 || $_SESSION['level'] == 2 ||
+                $_SESSION['level'] == 10|| $_SESSION['level'] == 11){
           include 'page_404.html'; 
         }
       ?>
@@ -74,12 +66,12 @@ if(!$ng_manager){
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>DataTables</h1>
+            <h1>User List</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">DataTables</li>
+              <li class="breadcrumb-item"><a href="index.php">Home</a></li>
+              <li class="breadcrumb-item active">User List</li>
             </ol>
           </div>
         </div>
@@ -93,9 +85,6 @@ if(!$ng_manager){
         <div class="col-12">
 
           <div class="card">
-            <div class="card-header">
-              <h3 class="card-title">DataTable with default features</h3>
-            </div>
             <!-- /.card-header -->
             <div class="card-body">
               <table id="example1" class="table table-bordered table-striped">
@@ -109,11 +98,9 @@ if(!$ng_manager){
                 </thead>
                 <tbody>
                   <?php 
-                    while ($dtmanager = mysqli_fetch_assoc($ng_manager)){
+                    while ($dtmanager = mysqli_fetch_assoc($ng_user)){
                     if($dtmanager['level'] == 1){
                       $lvl = 'Manager';
-                    }else if($dtmanager['level'] == 5){
-                      $lvl = 'Field Tech';
                     }else if($dtmanager['level'] == 10){
                       $lvl = 'Finance';
                     }else if($dtmanager['level'] == 11){

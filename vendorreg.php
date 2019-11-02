@@ -7,9 +7,10 @@ include "database/check.php";
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>AdminLTE 3 | General Form Elements</title>
+  <title>Admin CMS</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="images/logo_cms.jpg" type="image/ico" />
 
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.css">
@@ -30,21 +31,14 @@ include "database/check.php";
   <!-- /.navbar -->
 
   <!-- Main Sidebar Container -->
-   <?php 
+     <?php 
         if($_SESSION['level'] == 0){
           include 'include/sidebar_supermanager.php';
-        }else if($_SESSION['level'] == 1){
-          include 'include/sidebar_manager.php';
-        }else if($_SESSION['level'] == 2){
-          include 'include/sidebar_submanager.php';
-        }else if($_SESSION['level'] == 5){
-          include './include/sidebar_fieldtec.php';
-        }else if($_SESSION['level'] == 10){
-          include './include/sidebar_finance.php';
         }else if($_SESSION['level'] == 11){
           include './include/sidebar_purchase.php';
-        }else if($_SESSION['level'] == ""){
-          include 'page_404.html'; 
+        }else if($_SESSION['level'] == "" || $_SESSION['level'] == 1 || $_SESSION['level'] == 2 || 
+          $_SESSION['level'] == 10){
+          include 'include/page_404.html'; 
         }
       ?>
   <!-- /.sidebar -->
@@ -56,12 +50,12 @@ include "database/check.php";
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Manager Registration</h1>
+            <h1>Create Vendor</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Manager Registration</li>
+              <li class="breadcrumb-item"><a href="index.php">Home</a></li>
+              <li class="breadcrumb-item active">Create Vendor</li>
             </ol>
           </div>
         </div>
@@ -74,7 +68,7 @@ include "database/check.php";
             <!-- general form elements -->
             <div class="card card-primary">
               <div class="card-header">
-                <h3 class="card-title">Form</h3>
+                <h3 class="card-title">Form Vendor</h3>
               </div>
               <!-- /.card-header -->
               <!-- form start -->
@@ -82,19 +76,19 @@ include "database/check.php";
                 <div class="card-body">
                   <div class="form-group">
                     <label for="inputVendor">Vendor Name</label>
-                    <input type="text" class="form-control" id="inputVendor" placeholder="Input Vendor" name="vendor">
+                    <input type="text" class="form-control" id="inputVendor" placeholder="Input Vendor" name="vendor" required>
                   </div>
                   <div class="form-group">
                     <label for="inputAddress">Alamat</label>
-                    <input type="text" class="form-control" id="inputAddress" placeholder="Input Address" name="alamat">
+                    <input type="text" class="form-control" id="inputAddress" placeholder="Input Address" name="alamat" required>
                   </div>
                   <div class="form-group">
                     <label for="inputNoTelp">No.Telp</label>
-                    <input type="tel" class="form-control" id="inputNoTelp" placeholder="Input Telephone Number" name="no_telp">
+                    <input type="tel" class="form-control" id="inputNoTelp" placeholder="Input Telephone Number" name="no_telp" required>
                   </div>
                   <div class="form-group">
                     <label for="inputEmail">E-mail</label>
-                    <input type="tel" class="form-control" id="inputEmail" placeholder="Input E-mail" name="email">
+                    <input type="tel" class="form-control" id="inputEmail" placeholder="Input E-mail" name="email" required>
                   </div>
                 <!-- /.card-body -->
                 <div class="card-footer">

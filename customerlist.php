@@ -2,9 +2,9 @@
 include "database/koneksi.php";
 include "database/check.php";
 
+$userloginid = $_SESSION['userloginid'];
 $userid = $_SESSION['userid'];
-$managerid = $_SESSION['managerid'];
-if($_SESSION['level'] == 0 || $_SESSION['level'] == 5){
+if($_SESSION['level'] == 0){
   $user = mysqli_query($connectdb, "SELECT ng_customer.id, 
                                           ng_customer.firstname, 
                                           ng_customer.lastname, 
@@ -28,8 +28,8 @@ if($_SESSION['level'] == 0 || $_SESSION['level'] == 5){
                                     INNER JOIN ng_kota ON ng_kota.id = ng_customer.kota
                                     INNER JOIN ng_node ON ng_node.nodeid = ng_customer.node
                                     INNER JOIN ng_userlogin ON ng_userlogin.id = ng_customer.userid
-                                    INNER JOIN ng_manager ON ng_manager.id = ng_userlogin.managerid
-                                    WHERE ng_userlogin.id = \"$userid\"
+                                    INNER JOIN ng_user ON ng_user.id = ng_userlogin.userid
+                                    WHERE ng_userlogin.id = \"$userloginid\"
                                     
                                     UNION
 
@@ -44,9 +44,9 @@ if($_SESSION['level'] == 0 || $_SESSION['level'] == 5){
                                     INNER JOIN ng_kota ON ng_kota.id = ng_customer.kota
                                     INNER JOIN ng_node ON ng_node.nodeid = ng_customer.node
                                     INNER JOIN ng_userlogin ON ng_userlogin.id = ng_customer.userid
-                                    INNER JOIN ng_submanager ON ng_userlogin.managerid = ng_submanager.id 
-                                    INNER JOIN ng_manager ON ng_submanager.managerid = ng_manager.id
-                                    WHERE ng_manager.id = \"$managerid\"");
+                                    INNER JOIN ng_submanager ON ng_userlogin.userid = ng_submanager.id 
+                                    INNER JOIN ng_user ON ng_submanager.managerid = ng_user.id
+                                    WHERE ng_user.id = \"$userid\"");
 
 }else if($_SESSION['level'] == 2){
   $user = mysqli_query($connectdb, "SELECT ng_customer.id, 
@@ -60,8 +60,8 @@ if($_SESSION['level'] == 0 || $_SESSION['level'] == 5){
                                     INNER JOIN ng_kota ON ng_kota.id = ng_customer.kota
                                     INNER JOIN ng_node ON ng_node.nodeid = ng_customer.node
                                     INNER JOIN ng_userlogin ON ng_userlogin.id = ng_customer.userid
-                                    INNER JOIN ng_submanager ON ng_submanager.id = ng_userlogin.managerid
-                                    WHERE ng_userlogin.id = \"$userid\"");
+                                    INNER JOIN ng_submanager ON ng_submanager.id = ng_userlogin.userid
+                                    WHERE ng_userlogin.id = \"$userloginid\"");
 }
 ?>
 <!DOCTYPE html>
@@ -69,9 +69,10 @@ if($_SESSION['level'] == 0 || $_SESSION['level'] == 5){
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>AdminLTE 3 | DataTables</title>
+  <title>Admin CMS</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="images/logo_cms.jpg" type="image/ico" />
 
 <!-- Font Awesome Icons -->
   <script src="https://kit.fontawesome.com/bd16c6b546.js"></script>
@@ -103,13 +104,7 @@ if($_SESSION['level'] == 0 || $_SESSION['level'] == 5){
           include 'include/sidebar_manager.php';
         }else if($_SESSION['level'] == 2){
           include 'include/sidebar_submanager.php';
-        }else if($_SESSION['level'] == 5){
-          include './include/sidebar_fieldtec.php';
-        }else if($_SESSION['level'] == 10){
-          include './include/sidebar_finance.php';
-        }else if($_SESSION['level'] == 11){
-          include './include/sidebar_purchase.php';
-        }else if($_SESSION['level'] == ""){
+        }else if($_SESSION['level'] == "" || $_SESSION['level'] == 10 || $_SESSION['level'] == 11){
           include 'page_404.html'; 
         }
       ?>
@@ -122,28 +117,24 @@ if($_SESSION['level'] == 0 || $_SESSION['level'] == 5){
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>DataTables</h1>
+            <h1>Customer List</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">DataTables</li>
+              <li class="breadcrumb-item"><a href="index.php">Home</a></li>
+              <li class="breadcrumb-item active">Customer List</li>
             </ol>
           </div>
         </div>
       </div><!-- /.container-fluid -->
     </section>
 
-    <!-- tAbel FidA -->
     <!-- Main content -->
     <section class="content">
       <div class="row">
         <div class="col-12">
 
           <div class="card">
-            <div class="card-header">
-              <h3 class="card-title">DataTable with default features</h3>
-            </div>
             <!-- /.card-header -->
             <div class="card-body">
               <table id="example1" class="table table-bordered table-striped">
@@ -155,23 +146,30 @@ if($_SESSION['level'] == 0 || $_SESSION['level'] == 5){
                   <th>Password</th>
                   <th>Kota</th>
                   <th>Node</th>
-                  <th>Edit</th>
+                  <th>Action</th>
                 </tr>
                 </thead>
                 <tbody>
-                  <?php while ($userdet = mysqli_fetch_assoc($user)){?>
+                  <?php while ($userdet = mysqli_fetch_assoc($user)){
+                  //password
+                  $countpass = strlen(substr($userdet['password'],0,-3));
+                  $replacepass = '';
+                  for($i = 0; $i < $countpass; $i++){
+                    $replacepass .= 'x';
+                  }
+                  $password = str_replace(substr($userdet['password'],0,-3), $replacepass ,$userdet['password']);
+                  //end password
+                  ?>
                 <tr>
                   <td><?php echo $userdet['firstname']; ?></td>
                   <td><?php echo $userdet['lastname']; ?></td>
                   <td><?php echo $userdet['username']; ?></td>
-                  <td><?php echo $userdet['password']; ?></td>
+                  <td><?php echo $password; ?></td>
                   <td><?php echo $userdet['kota']; ?></td>
                   <td><?php echo $userdet['node']; ?></td>
                   <td>
-                      <a href="customerdetail.php?id=<?php echo $userdet['id']; ?>"> View </a>
-                      <?php if($_SESSION['level'] <> 5 ){?>
-                        <a href="customeredit.php?id=<?php echo $userdet['id']; ?>"> Edit </a>
-                      <?php }?>
+                      <a class="btn btn-primary btn-sm" href="customerdetail.php?id=<?php echo $userdet['id']; ?>"> View </a>
+                      <a class="btn btn-primary btn-sm" href="customeredit.php?id=<?php echo $userdet['id']; ?>"> Edit </a>
                   </td>
                 </tr>
                 

@@ -22,9 +22,10 @@ $memolist = mysqli_query($connectdb, "SELECT DISTINCT ng_purchaseorder.poid,
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>AdminLTE 3 | DataTables</title>
+  <title>Admin CMS</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="images/logo_cms.jpg" type="image/ico" />
 
 <!-- Font Awesome Icons -->
   <script src="https://kit.fontawesome.com/bd16c6b546.js"></script>
@@ -56,8 +57,6 @@ $memolist = mysqli_query($connectdb, "SELECT DISTINCT ng_purchaseorder.poid,
           include 'include/sidebar_manager.php';
         }else if($_SESSION['level'] == 2){
           include 'include/sidebar_submanager.php';
-        }else if($_SESSION['level'] == 5){
-          include './include/sidebar_fieldtec.php';
         }else if($_SESSION['level'] == 10){
           include './include/sidebar_finance.php';
         }else if($_SESSION['level'] == 11){
@@ -75,12 +74,12 @@ $memolist = mysqli_query($connectdb, "SELECT DISTINCT ng_purchaseorder.poid,
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>DataTables</h1>
+            <h1>Internal Memo List</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">DataTables</li>
+              <li class="breadcrumb-item"><a href="index.php">Home</a></li>
+              <li class="breadcrumb-item active">Internal Memo List</li>
             </ol>
           </div>
         </div>
@@ -94,9 +93,6 @@ $memolist = mysqli_query($connectdb, "SELECT DISTINCT ng_purchaseorder.poid,
         <div class="col-12">
 
           <div class="card">
-            <div class="card-header">
-              <h3 class="card-title">DataTable with default features</h3>
-            </div>
             <!-- /.card-header -->
             <div class="card-body">
               <table id="example1" class="table table-bordered table-striped">
@@ -120,7 +116,7 @@ $memolist = mysqli_query($connectdb, "SELECT DISTINCT ng_purchaseorder.poid,
                       <td><?php echo $dtmemo['poid']; ?></td>
                       <td><?php echo date('d F Y', strtotime($dtmemo['approve_date'])); ?></td>
                       <td><?php echo $dtmemo['username']; ?></td>
-                      <td align="left"><?php echo $dtmemo['total']; ?></td>
+                      <td align="left"><?php echo number_format($dtmemo['total']); ?></td>
                       <td><button id="send" type="submit" class="btn btn-block btn-primary btn-sm" onclick="location.href = 'imemofinancedetail.php?memoid=<?php echo $dtmemo['memoid']; ?>&vendor=<?php echo $dtmemo['vendor']; ?>&date=<?php echo $dtmemo['date']; ?>&poid=<?php echo $dtmemo['poid']; ?>&approve_date=<?php echo $dtmemo['approve_date']; ?>&username=<?php echo $dtmemo['username']; ?>'">Detail</button>
                       </td>
                     </tr>

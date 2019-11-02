@@ -10,9 +10,10 @@ $ng_paket = mysqli_query($connectdb, "SELECT * FROM ng_paket");
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>AdminLTE 3 | DataTables</title>
+  <title>Admin CMS</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="images/logo_cms.jpg" type="image/ico" />
 
 <!-- Font Awesome Icons -->
   <script src="https://kit.fontawesome.com/bd16c6b546.js"></script>
@@ -44,13 +45,7 @@ $ng_paket = mysqli_query($connectdb, "SELECT * FROM ng_paket");
           include 'include/sidebar_manager.php';
         }else if($_SESSION['level'] == 2){
           include 'include/sidebar_submanager.php';
-        }else if($_SESSION['level'] == 5){
-          include './include/sidebar_fieldtec.php';
-        }else if($_SESSION['level'] == 10){
-          include './include/sidebar_finance.php';
-        }else if($_SESSION['level'] == 11){
-          include './include/sidebar_purchase.php';
-        }else if($_SESSION['level'] == ""){
+        }else if($_SESSION['level'] == "" || $_SESSION['level'] == 10 || $_SESSION['level'] == 11){
           include 'page_404.html'; 
         }
       ?>
@@ -63,12 +58,12 @@ $ng_paket = mysqli_query($connectdb, "SELECT * FROM ng_paket");
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>DataTables</h1>
+            <h1>Paket List</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">DataTables</li>
+              <li class="breadcrumb-item"><a href="index.php">Home</a></li>
+              <li class="breadcrumb-item active">Paket List</li>
             </ol>
           </div>
         </div>
@@ -82,16 +77,13 @@ $ng_paket = mysqli_query($connectdb, "SELECT * FROM ng_paket");
         <div class="col-12">
 
           <div class="card">
-            <div class="card-header">
-              <h3 class="card-title">DataTable with default features</h3>
-            </div>
             <!-- /.card-header -->
             <div class="card-body">
               <table id="example1" class="table table-bordered table-striped">
                 <thead>
                           <tr>
                     <th>Paket Name</th>
-                    <th>Kode Product</th>
+                    <th>Deskription</th>
                     <th>Price A</th>
                     <th>Price A</th>
                     <th>Price A</th>
@@ -105,13 +97,13 @@ $ng_paket = mysqli_query($connectdb, "SELECT * FROM ng_paket");
 
                     <tr>
                       <td><?php echo $data['paket']; ?></td>
-                      <td><?php echo $data['kd_prod']; ?></td>
-                      <td><?php echo $data['price1']; ?></td>
-                      <td><?php echo $data['price2']; ?></td>
-                      <td><?php echo $data['price3']; ?></td>
-                      <td><?php echo $data['price4']; ?></td>
-                      <td><?php echo $data['price5']; ?></td>
-                      <td><?php echo $data['price6']; ?></td>
+                      <td><?php echo $data['description']; ?></td>
+                      <td><?php echo number_format($data['price1']); ?></td>
+                      <td><?php echo number_format($data['price2']); ?></td>
+                      <td><?php echo number_format($data['price3']); ?></td>
+                      <td><?php echo number_format($data['price4']); ?></td>
+                      <td><?php echo number_format($data['price5']); ?></td>
+                      <td><?php echo number_format($data['price6']); ?></td>
                     </tr>
 
                   <?php } ?>

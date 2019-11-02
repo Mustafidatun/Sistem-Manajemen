@@ -8,17 +8,16 @@ $chpole = mysqli_query($connectdb, "SELECT ng_childpool.*,
                                     LEFT JOIN ng_paket ON ng_paket.kd_prod = ng_childpool.kd_prod
                                     ORDER BY id, poolid ASC");
 
-$paketlist = mysqli_query($connectdb, "SELECT kd_prod, paket FROM ng_paket");
-
 ?>
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>AdminLTE 3 | DataTables</title>
+  <title>Admin CMS</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="images/logo_cms.jpg" type="image/ico" />
 
 <!-- Font Awesome Icons -->
   <script src="https://kit.fontawesome.com/bd16c6b546.js"></script>
@@ -48,15 +47,8 @@ $paketlist = mysqli_query($connectdb, "SELECT kd_prod, paket FROM ng_paket");
           include 'include/sidebar_supermanager.php';
         }else if($_SESSION['level'] == 1){
           include 'include/sidebar_manager.php';
-        }else if($_SESSION['level'] == 2){
-          include 'include/sidebar_submanager.php';
-        }else if($_SESSION['level'] == 5){
-          include './include/sidebar_fieldtec.php';
-        }else if($_SESSION['level'] == 10){
-          include './include/sidebar_finance.php';
-        }else if($_SESSION['level'] == 11){
-          include './include/sidebar_purchase.php';
-        }else if($_SESSION['level'] == ""){
+        }else if($_SESSION['level'] == "" || $_SESSION['level'] == 2 || $_SESSION['level'] == 10 || 
+                $_SESSION['level'] == 11){
           include 'page_404.html'; 
         }
       ?>
@@ -69,12 +61,12 @@ $paketlist = mysqli_query($connectdb, "SELECT kd_prod, paket FROM ng_paket");
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>DataTables</h1>
+            <h1>Child Pool List</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">DataTables</li>
+              <li class="breadcrumb-item"><a href="index.php">Home</a></li>
+              <li class="breadcrumb-item active">Child Pool List</li>
             </ol>
           </div>
         </div>
@@ -88,9 +80,6 @@ $paketlist = mysqli_query($connectdb, "SELECT kd_prod, paket FROM ng_paket");
         <div class="col-12">
 
           <div class="card">
-            <div class="card-header">
-              <h3 class="card-title">DataTable with default features</h3>
-            </div>
             <!-- /.card-header -->
             <div class="card-body">
               <table id="example1" class="table table-bordered table-striped">
@@ -110,51 +99,13 @@ $paketlist = mysqli_query($connectdb, "SELECT kd_prod, paket FROM ng_paket");
                       <td><?php echo $chpooldet['poolname']; ?></td>
                       <td><?php echo $chpooldet['start_address']; ?></td>
                       <td><?php echo $chpooldet['end_address']; ?></td>
-                      <td><?php echo $chpooldet['available']; ?></td>
+                      <td><?php echo $chpooldet['available']; ?>
+                      </td>
                       <td><?php if($chpooldet['paket'] != NULL){
                                   echo $chpooldet['paket'];
                                 }else{
                             ?>
-                              
-                      <!-- Button trigger modal -->
-                      <button type="button" class="btn btn-block btn-primary btn-sm" data-toggle="modal" data-target="#myModal">
-                        Add Paket
-                      </button>
-
-                      <!-- Modal -->
-                      <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                        <div class="modal-dialog">
-                          <div class="modal-content">
-                            <div class="modal-header">
-                              <h4 class="modal-title" id="myModalLabel">Paket</h4>
-                              <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>      
-                            </div>
-                            <form action="" method=post>
-                              <div class="modal-body">
-                                  <input id="chpoolid" name="chpoolid" type="text" value="<?php echo $chpooldet['id']; ?>">
-                                  <div class="form-group">
-                                    <label>Paket</label>
-                                    <select class="form-control" name="kd_prod">
-
-                                      <option value=''>Pilih</option>
-                                      <?php 
-                                      while ($dtpaket = mysqli_fetch_assoc($paketlist)){
-                                          echo "<option value=".$dtpaket['kd_prod'].">".$dtpaket['paket']."</option>";
-                                      }
-                                  ?> 
-                                    </select>
-                                  </div>
-                              </div>
-                              <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                               <button id="send" type="submit" class="btn btn-primary">Save</button>
-                              </div>
-                            </form>
-                          </div>
-                        </div>
-                      </div>
-                      <!-- End Modal -->
-                    
+                            <button id="send" type="submit" onclick="location.href = 'assignmentchpool.php?id=<?php echo $chpooldet['id']; ?>'" class="btn btn-success btn-xs">Add Paket</button>
                             <?php  } ?>
                       </td>
                     </tr>
@@ -210,13 +161,3 @@ $paketlist = mysqli_query($connectdb, "SELECT kd_prod, paket FROM ng_paket");
 </script>
 </body>
 </html>
-
-<?php
-        if($_SERVER["REQUEST_METHOD"] == "POST") {
-          $kd_prod = $_POST['kd_prod'];
-
-          $updatepaket = mysqli_query($connectdb, "UPDATE ng_childpool SET kd_prod = \"$kd_prod\" WHERE id = \"$chpoolid\"");
-
-          echo("<meta http-equiv='refresh' content='1'>"); //Refresh by HTTP META 
-         }
-      ?>

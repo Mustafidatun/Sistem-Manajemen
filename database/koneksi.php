@@ -2,7 +2,7 @@
 $host="localhost"; // Host name 
 $username="root"; // Mysql username 
 $password=""; // Mysql password 
-$db_name="si_administrasi"; // Database name
+$db_name="admincms"; // Database name
 
  
 $connectdb= mysqli_connect($host, $username, $password, $db_name);

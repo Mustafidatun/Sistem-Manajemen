@@ -11,9 +11,10 @@ $city = mysqli_query($connectdb, "select id,kota from ng_kota");
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>AdminLTE 3 | General Form Elements</title>
+  <title>Admin CMS</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="images/logo_cms.jpg" type="image/ico" />
 
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.css">
@@ -39,15 +40,8 @@ $city = mysqli_query($connectdb, "select id,kota from ng_kota");
           include 'include/sidebar_supermanager.php';
         }else if($_SESSION['level'] == 1){
           include 'include/sidebar_manager.php';
-        }else if($_SESSION['level'] == 2){
-          include 'include/sidebar_submanager.php';
-        }else if($_SESSION['level'] == 5){
-          include './include/sidebar_fieldtec.php';
-        }else if($_SESSION['level'] == 10){
-          include './include/sidebar_finance.php';
-        }else if($_SESSION['level'] == 11){
-          include './include/sidebar_purchase.php';
-        }else if($_SESSION['level'] == ""){
+        }else if($_SESSION['level'] == "" || $_SESSION['level'] == 2 ||
+                $_SESSION['level'] == 10 || $_SESSION['level'] == 11){
           include 'page_404.html'; 
         }
       ?>
@@ -60,12 +54,12 @@ $city = mysqli_query($connectdb, "select id,kota from ng_kota");
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Manager Registration</h1>
+            <h1>Create Node</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Manager Registration</li>
+              <li class="breadcrumb-item"><a href="index.php">Home</a></li>
+              <li class="breadcrumb-item active">Create Node</li>
             </ol>
           </div>
         </div>
@@ -78,7 +72,7 @@ $city = mysqli_query($connectdb, "select id,kota from ng_kota");
             <!-- general form elements -->
             <div class="card card-primary">
               <div class="card-header">
-                <h3 class="card-title">Form</h3>
+                <h3 class="card-title">Form Node</h3>
               </div>
               <!-- /.card-header -->
               <!-- form start -->
@@ -86,15 +80,15 @@ $city = mysqli_query($connectdb, "select id,kota from ng_kota");
                 <div class="card-body">
                   <div class="form-group">
                     <label for="inputNode">Node Name</label>
-                    <input type="text" class="form-control" id="inputNode" placeholder="Input Node Name" name="node">
+                    <input type="text" class="form-control" id="inputNode" placeholder="Input Node Name" name="node" required>
                   </div>
                   <div class="form-group">
                     <label for="inputAddress">Node IP Address</label>
-                    <input type="text" class="form-control" id="inputAddress" placeholder="Input Node IP Address" name="address">
+                    <input type="text" class="form-control" id="inputAddress" placeholder="Input Node IP Address" name="address" required>
                   </div>
                   <div class="form-group">
                     <label>Kota</label>
-                    <select class="form-control" name="kota">
+                    <select class="form-control" name="kota" required>
                       <option value=''>Pilih</option>
                       <?php while ($idkota = mysqli_fetch_row($city)){?>
                           <option value=<?php echo $idkota[0];?>><?php echo $idkota[1]?></option>
@@ -103,19 +97,19 @@ $city = mysqli_query($connectdb, "select id,kota from ng_kota");
                   </div>
                   <div class="form-group">
                     <label for="inputSecret">Secret</label>
-                    <input type="text" class="form-control" id="inputSecret" placeholder="Input Node Secret" name="secret">
+                    <input type="text" class="form-control" id="inputSecret" placeholder="Input Node Secret" name="secret" required>
                   </div>
                   <div class="form-group">
                     <label for="inputType">Type</label>
-                    <input type="text" class="form-control" id="inputType" placeholder="Mikrotik" name="type">
+                    <input type="text" class="form-control" id="inputType" placeholder="Mikrotik" name="type" required>
                   </div>
                   <div class="form-group">
                     <label for="inputPort">Port</label>
-                    <input type="text" class="form-control" id="inputPort" placeholder="3799" name="port">
+                    <input type="text" class="form-control" id="inputPort" placeholder="3799" name="port" required>
                   </div>
                   <div class="form-group">
                     <label>Pool</label>
-                    <select class="form-control" name="pool">
+                    <select class="form-control" name="pool" required>
                       <option value=''>Pilih</option>
                       <?php while ($xpool = mysqli_fetch_row($pool)){?>
         
@@ -125,7 +119,7 @@ $city = mysqli_query($connectdb, "select id,kota from ng_kota");
                     </select>
                   </div>
                 <div class="card-footer">
-                  <button type="submit" class="btn btn-primary">Submit</button>
+                  <button type="submit" class="btn btn-primary">Save</button>
                   <button type="reset" class="btn btn-default float-right">Cancel</button>
                 </div>
 

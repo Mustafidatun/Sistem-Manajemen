@@ -2,19 +2,19 @@
 include "database/koneksi.php";
 include "database/check.php";
 
+$userloginid = $_SESSION['userloginid'];
 $userid = $_SESSION['userid'];
-$managerid = $_SESSION['managerid'];
 
-if($_SESSION['level'] == 1 || $_SESSION['level'] == 5 || $_SESSION['level'] == 10 || $_SESSION['level'] == 11){
-    $user = mysqli_query($connectdb, "SELECT ng_manager.* 
-                                      FROM ng_manager
-                                      INNER JOIN ng_userlogin ON ng_userlogin.managerid = ng_manager.id
-                                      WHERE ng_userlogin.id = \"$userid\" AND ng_manager.id = \"$managerid\"");
-}else if($_SESSION['level'] == 2){
+if($_SESSION['level'] == 1 || $_SESSION['level'] == 10 || $_SESSION['level'] == 11){
+    $user = mysqli_query($connectdb, "SELECT ng_user.* 
+                                      FROM ng_user
+                                      INNER JOIN ng_userlogin ON ng_userlogin.userid = ng_user.id
+                                      WHERE ng_userlogin.id = \"$userloginid\" AND ng_user.id = \"$userid\"");
+}else if($_SESSION['level'] == 2){ 
     $user = mysqli_query($connectdb, "SELECT ng_submanager.* 
                                       FROM ng_submanager
-                                      INNER JOIN ng_userlogin ON ng_userlogin.managerid = ng_submanager.id
-                                      WHERE ng_userlogin.id = \"$userid\" AND ng_manager.id = \"$managerid\"");
+                                      INNER JOIN ng_userlogin ON ng_userlogin.userid = ng_submanager.id
+                                      WHERE ng_userlogin.id = \"$userloginid\" AND ng_submanager.id = \"$userid\"");
 }
 $dtuser = mysqli_fetch_assoc($user);
 ?>
@@ -23,9 +23,10 @@ $dtuser = mysqli_fetch_assoc($user);
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>AdminLTE 3 | General Form Elements</title>
+  <title>Admin CMS</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="images/logo_cms.jpg" type="image/ico" />
 
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.css">
@@ -53,8 +54,6 @@ $dtuser = mysqli_fetch_assoc($user);
           include 'include/sidebar_manager.php';
         }else if($_SESSION['level'] == 2){
           include 'include/sidebar_submanager.php';
-        }else if($_SESSION['level'] == 5){
-          include './include/sidebar_fieldtec.php';
         }else if($_SESSION['level'] == 10){
           include './include/sidebar_finance.php';
         }else if($_SESSION['level'] == 11){
@@ -72,12 +71,12 @@ $dtuser = mysqli_fetch_assoc($user);
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Manager Registration</h1>
+            <h1>Profil</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Manager Registration</li>
+              <li class="breadcrumb-item"><a href="index.php">Home</a></li>
+              <li class="breadcrumb-item active">Profil</li>
             </ol>
           </div>
         </div>
@@ -90,7 +89,7 @@ $dtuser = mysqli_fetch_assoc($user);
             <!-- general form elements -->
             <div class="card card-primary">
               <div class="card-header">
-                <h3 class="card-title">Form</h3>
+                <h3 class="card-title">Form Profil</h3>
               </div>
               <!-- /.card-header -->
               <!-- form start -->
@@ -104,19 +103,19 @@ $dtuser = mysqli_fetch_assoc($user);
                   </div>
                   <div class="form-group">
                     <label for="inputEmail">Email Address</label>
-                    <input type="email" class="form-control" id="inputEmail" placeholder="Input email" name="email" value="<?php echo $dtuser['email']; ?>">
+                    <input type="email" class="form-control" id="inputEmail" placeholder="Input email" name="email" value="<?php echo $dtuser['email']; ?>" required>
                   </div>
                   <div class="form-group">
                     <label for="inputOldPassword">Old Password</label>
-                    <input type="password" class="form-control" id="inputOldPassword" placeholder="Input Old Password" name="oldpassword">
+                    <input type="password" class="form-control" id="inputOldPassword" placeholder="Input Old Password" name="oldpassword" required>
                   </div>
                   <div class="form-group">
                     <label for="inputNewPassword">New Password</label>
-                    <input type="password" class="form-control" id="inputNewPassword" placeholder="Input New Password" name="newpassword">
+                    <input type="password" class="form-control" id="inputNewPassword" placeholder="Input New Password" name="newpassword" required>
                   </div>
                   <div class="form-group">
                     <label for="inputNewPassword2">Repeat Password</label>
-                    <input type="password" class="form-control" id="inputNewPassword2" placeholder="Input Repeat Password" name="newpassword2" data-validate-linked="newpassword">
+                    <input type="password" class="form-control" id="inputNewPassword2" placeholder="Input Repeat Password" name="newpassword2" data-validate-linked="newpassword" required>
                   </div>
                   <div class="form-group">
                     <label for="inputFile">Upload Foto Profil</label>
@@ -154,6 +153,7 @@ $dtuser = mysqli_fetch_assoc($user);
 <!-- jQuery -->
 <script src="https://kit.fontawesome.com/bd16c6b546.js"></script>
 <script src="./js/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js"></script>
 <!-- Bootstrap -->
 <script src="./js/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- AdminLTE -->
@@ -178,6 +178,9 @@ $dtuser = mysqli_fetch_assoc($user);
       } 
     });
     });
+    $(document).ready(function () {
+      bsCustomFileInput.init()
+    });
   </script>
 </body>
 </html>
@@ -200,7 +203,7 @@ $dtuser = mysqli_fetch_assoc($user);
     $path = "/var/www/html/ng4dm1n/production/foto/$name_photo";
     $oldpath = "/var/www/html/ng4dm1n/production/foto/$old_photo";
 
-        $passwordcheck = mysqli_query($connectdb, "SELECT password FROM ng_userlogin WHERE password =\"$oldpassword\" AND id = \"$userid\"");
+        $passwordcheck = mysqli_query($connectdb, "SELECT password FROM ng_userlogin WHERE password =\"$oldpassword\" AND id = \"$userloginid\"");
     
     if(mysqli_fetch_row($passwordcheck) != NULL ){
           if (!empty($_FILES['image-file']['name'])) {
@@ -211,16 +214,16 @@ $dtuser = mysqli_fetch_assoc($user);
           move_uploaded_file($temp_photo,$path);
 
           if($_SESSION['level'] == 1 || $_SESSION['level'] == 10 || $_SESSION['level'] == 11){  
-                $updateuser = mysqli_query($connectdb, "UPDATE ng_manager SET password = \"$newpassword\", email= \"$email\", foto = \"$name_photo\"
+                $updateuser = mysqli_query($connectdb, "UPDATE ng_user SET password = \"$newpassword\", email= \"$email\", foto = \"$name_photo\"
                                                   WHERE id = \"$id\"");
             $updateuserlogin = mysqli_query($connectdb, "UPDATE ng_userlogin SET password = \"$newpassword\"
-                                                  WHERE id = \"$userid\"");
+                                                  WHERE id = \"$userloginid\"");
 
           }else if($_SESSION['level'] == 2){
                 $updateuser = mysqli_query($connectdb, "UPDATE ng_submanager SET password = \"$newpassword\", email= \"$email\", foto = \"$name_photo\"
                     WHERE id = \"$id\"");
             $updateuserlogin = mysqli_query($connectdb, "UPDATE ng_userlogin SET password = \"$newpassword\"
-                                                  WHERE id = \"$userid\"");
+                                                  WHERE id = \"$userloginid\"");
 
           }
                                                 
@@ -232,16 +235,16 @@ $dtuser = mysqli_fetch_assoc($user);
            }
        }else{ //jika tidak upload gambar
               if($_SESSION['level'] == 1 || $_SESSION['level'] == 10 || $_SESSION['level'] == 11){
-            $updateuser = mysqli_query($connectdb, "UPDATE ng_manager SET password = \"$newpassword\", email= \"$email\"
+            $updateuser = mysqli_query($connectdb, "UPDATE ng_user SET password = \"$newpassword\", email= \"$email\"
                                                   WHERE id = \"$id\"");
         $updateuserlogin = mysqli_query($connectdb, "UPDATE ng_userlogin SET password = \"$newpassword\"
-                                                  WHERE id = \"$userid\"");
+                                                  WHERE id = \"$userloginid\"");
 
           }else if($_SESSION['level'] == 2){
             $updateuser = mysqli_query($connectdb, "UPDATE ng_submanager SET password = \"$newpassword\", email= \"$email\"
                     WHERE id = \"$id\"");
         $updateuserlogin = mysqli_query($connectdb, "UPDATE ng_userlogin SET password = \"$newpassword\"
-                                                  WHERE id = \"$userid\"");
+                                                  WHERE id = \"$userloginid\"");
 
           }
        }

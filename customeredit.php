@@ -2,9 +2,9 @@
 include "database/koneksi.php";
 include "database/check.php";
 
-if (isset($_GET['id'])) {
+if (!empty($_GET['id'])) {
     
-    $userid = $_SESSION['userid'];
+    $userloginid = $_SESSION['userloginid'];
     $customerid = $_GET['id'];
 
     $user = mysqli_query($connectdb, "SELECT ng_customer.firstname, 
@@ -33,7 +33,7 @@ if (isset($_GET['id'])) {
                                                   ng_node.nodeid= ".$data['nodeid']." GROUP BY ng_paket.paket");
     
   } else {
-    header("location:userlist.php");
+    header("location:customerlist.php");
   }
 ?>
 <!DOCTYPE html>
@@ -41,9 +41,10 @@ if (isset($_GET['id'])) {
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>AdminLTE 3 | General Form Elements</title>
+  <title>Admin CMS</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="images/logo_cms.jpg" type="image/ico" />
 
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.css">
@@ -71,13 +72,7 @@ if (isset($_GET['id'])) {
           include 'include/sidebar_manager.php';
         }else if($_SESSION['level'] == 2){
           include 'include/sidebar_submanager.php';
-        }else if($_SESSION['level'] == 5){
-          include './include/sidebar_fieldtec.php';
-        }else if($_SESSION['level'] == 10){
-          include './include/sidebar_finance.php';
-        }else if($_SESSION['level'] == 11){
-          include './include/sidebar_purchase.php';
-        }else if($_SESSION['level'] == ""){
+        }else if($_SESSION['level'] == "" || $_SESSION['level'] == 10 || $_SESSION['level'] == 11){
           include 'page_404.html'; 
         }
       ?>
@@ -90,12 +85,12 @@ if (isset($_GET['id'])) {
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Manager Registration</h1>
+            <h1>Customer Edit</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Manager Registration</li>
+              <li class="breadcrumb-item"><a href="index.php">Home</a></li>
+              <li class="breadcrumb-item active">Customer Edit</li>
             </ol>
           </div>
         </div>
@@ -108,19 +103,19 @@ if (isset($_GET['id'])) {
             <!-- general form elements -->
             <div class="card card-primary">
               <div class="card-header">
-                <h3 class="card-title">Form</h3>
+                <h3 class="card-title">Form Customer Edit</h3>
               </div>
               <!-- /.card-header -->
               <!-- form start -->
               <form role="form" action="#" method=post enctype="multipart/form-data">
                 <div class="card-body">
                   <div class="form-group">
-                    <label for="inputFirstName">First Name</label>
-                    <input type="text" class="form-control" id="inputFirstName" placeholder="Input First Name" name="firstname" vaLue="<?php echo $data['firstname']; ?>">
+                    <label for="inputFirstName">First Name</label> 
+                    <input type="text" class="form-control" id="inputFirstName" placeholder="Input First Name" name="firstname" vaLue="<?php echo $data['firstname']; ?>" required>
                   </div>
                   <div class="form-group">
                     <label for="inputLastname">Last Name</label>
-                    <input type="text" class="form-control" id="inputLastname" placeholder="Input Last Name" name="lastname" vaLue="<?php echo $data['lastname']; ?>">
+                    <input type="text" class="form-control" id="inputLastname" placeholder="Input Last Name" name="lastname" vaLue="<?php echo $data['lastname']; ?>" required>
                   </div>
                   <div class="form-group">
                     <label for="inputKota">Kota</label>
@@ -133,7 +128,7 @@ if (isset($_GET['id'])) {
                   <div class="form-group">
                     <label>Paket</label>
                     <input type="hidden" class="form-control" id="oldpaket" name="oldpaket" vaLue="<?php echo $data['paketid']; ?>" readonly>
-                    <select id="paket" class="form-control" name="paket">
+                    <select id="paket" class="form-control" name="paket" required>
                       <option value=''>Pilih</option>
                       <?php 
                         while ($dtpaket = mysqli_fetch_array($ng_paket)){
@@ -147,29 +142,29 @@ if (isset($_GET['id'])) {
                   </div>
                   <div class="form-group">
                     <label for="inputAddress">Alamat</label>
-                    <input type="text" class="form-control" id="inputAddress" placeholder="Input Address" name="alamat" vaLue="<?php echo $data['alamat']; ?>">
+                    <input type="text" class="form-control" id="inputAddress" placeholder="Input Address" name="alamat" vaLue="<?php echo $data['alamat']; ?>" required>
                   </div>
                   <div class="form-group">
                     <label for="inputEmail">E-mail</label>
                     <input id="oldemail" name="oldemail" type="hidden"  vaLue="<?php echo $data['email']; ?>">
-                    <input type="email" class="form-control" id="inputEmail" placeholder="Input E-mail" name="email" vaLue="<?php echo $data['email']; ?>">
+                    <input type="email" class="form-control" id="inputEmail" placeholder="Input E-mail" name="email" vaLue="<?php echo $data['email']; ?>" required>
                   </div>
                   <div class="form-group">
                     <label for="inputNoTelp">No. Telp</label>
-                    <input type="tel" class="form-control" id="inputNoTelp" placeholder="Input Telephone Number" name="no_telp" vaLue="<?php echo $data['no_telp']; ?>">
+                    <input type="tel" class="form-control" id="inputNoTelp" placeholder="Input Telephone Number" name="no_telp" vaLue="<?php echo $data['no_telp']; ?>" required>
                   </div>
                   <div class="form-group">
                     <label for="inputIdentitas">No. Identitas</label>
                     <input id="oldidentitas" name="oldidentitas" type="hidden"  vaLue="<?php echo $data['identitas']; ?>">
-                    <input type="number" class="form-control" id="inputNoTelp" placeholder="Input ID Number KTP/SIM/Pasport" name="identitas" vaLue="<?php echo $data['identitas']; ?>">
+                    <input type="number" class="form-control" id="inputNoTelp" placeholder="Input ID Number KTP/SIM/Pasport" name="identitas" vaLue="<?php echo $data['identitas']; ?>" required>
                   </div>
                   <div class="form-group">
                     <label for="inputFile">Upload KTP/SIM/Pasport</label>
                     <div class="input-group">
                       <div class="custom-file">
-                        <input type="file" class="custom-file-input" id="inputFile" name="image-file">
+                        <input type="file" class="custom-file-input" id="inputFile" name="image-file" required>
                         <input id="image-old" type="hidden" name="image-old" value="<?php echo $data['foto'] ; ?>">
-                        <label class="custom-file-label" for="inputFile">Choose file</label>
+                        <label class="custom-file-label" for="inputFile"><?php echo $data['foto']; ?></label>
                       </div>
                     </div>
                   </div>
@@ -213,6 +208,12 @@ if (isset($_GET['id'])) {
 
 <!-- OPTIONAL SCRIPTS -->
 <script src="./js/demo.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js"></script>
+<script>
+  $(document).ready(function () {
+  bsCustomFileInput.init()
+  })
+</script>
 </body>
 </html>
 
@@ -220,33 +221,35 @@ if (isset($_GET['id'])) {
 
    if($_SERVER["REQUEST_METHOD"] == "POST") {
  
-          $firstname= $_POST['firstname'];
-            $lastname = $_POST['lastname'];
-            $oldpaket = $_POST['oldpaket'];
-            $paket = $_POST['paket'];
-            $oldemail = $_POST['oldemail'];
-          $email = $_POST['email'];
-          $no_telp = $_POST['no_telp'];
-            $alamat = $_POST['alamat'];
-            $oldidentitas = $_POST['oldidentitas'];
-            $identitas = $_POST['identitas'];
-            $old_photo = $_POST['image-old'];
-            $extension = explode("/", $_FILES["image-file"]["type"]);
-            $name_photo = $identitas.".".$extension[1];   
-            $temp_photo = $_FILES['image-file']['tmp_name'];
-            $size_photo = $_FILES['image-file']['size'];
-            $type_photo = $_FILES['image-file']['type'];
-            $path = "foto/$name_photo";
-            $oldpath = "foto/$old_photo";
+    $firstname= $_POST['firstname'];
+    $lastname = $_POST['lastname'];
+    $oldpaket = $_POST['oldpaket'];
+    $paket = $_POST['paket'];
+    $oldemail = $_POST['oldemail'];
+    $email = $_POST['email'];
+    $no_telp = $_POST['no_telp'];
+    $alamat = $_POST['alamat'];
+    $oldidentitas = $_POST['oldidentitas'];
+    $identitas = $_POST['identitas'];
+    $old_photo = $_POST['image-old'];
+    $extension = explode("/", $_FILES["image-file"]["type"]);
+    $name_photo = $identitas.".".$extension[1];   
+    $temp_photo = $_FILES['image-file']['tmp_name'];
+    $size_photo = $_FILES['image-file']['size'];
+    $type_photo = $_FILES['image-file']['type'];
+    $path = "foto/$name_photo";
+    $oldpath = "foto/$old_photo";
 
 
     //random childpool
     $netaddress = 24;
     $ng_childpool = mysqli_query($connectdb, "SELECT ng_childpool.id, ng_childpool.start_address, ng_childpool.end_address FROM ng_childpool, ng_paket where ng_childpool.kd_prod=ng_paket.kd_prod and ng_paket.id='".$paket."'");
-    $ng_usedpoolcheck = mysqli_query($connectdb, "SELECT address FROM ng_usedpool");
-    $getusedpool = mysqli_fetch_assoc($ng_usedpoolcheck );
+    $ng_usedpoolcheck = mysqli_query($connectdb, "SELECT ip_address FROM ng_customer");
     $dtusedpool = array();
-    array_push($dtusedpool,$getusedpool['address']);
+    while($getusedpool = mysqli_fetch_assoc($ng_usedpoolcheck )){
+      array_push($dtusedpool,$getusedpool['ip_address']);
+    }
+    print_r($dtusedpool);
     
     function cidr2NetmaskAddr($cidr) {
            $ta = substr($cidr, strpos($cidr, '/') + 1) * 1;
@@ -284,7 +287,7 @@ if (isset($_GET['id'])) {
                }  
          }
         $randomArray = array_rand($data); 
-    $randpooid = $data[$randomArray]['poolid'];
+        $randpooid = $data[$randomArray]['poolid'];
         $randaddress = $data[$randomArray]['address'];
     //end random childpool
 
@@ -296,45 +299,48 @@ if (isset($_GET['id'])) {
     $encryp_username  = base64_encode($username);
     $mail             = new PHPMailer();
     $body             = 
-            "<body style='margin: 10px;'>
-                  <div style='width: 640px; font-family: Helvetica, sans-serif; font-size: 13px; padding:10px; line-height:150%; border:#eaeaea solid 10px;'>
-                    <br>
-                    <strong>Terima Kasih Telah Mendaftar</strong><br>
-                    <b>Nama Anda : </b>".$firstname." ".$lastname."<br>
-                    <b>Email : </b>".$email."<br>
-                    <b>URL Konfirmasi : </b>http://10.10.10.222/ng4dm1n/production/confirmemail.php?username=".$encryp_username."<br>
-                    <br>
-                  </div>
-            </body>";
-    $body             = eregi_replace("[\]",'',$body);
+    "<body style='margin: 10px;'>
+          <div style='width: 640px; font-family: Helvetica, sans-serif; font-size: 13px; padding:10px; line-height:150%; border:#eaeaea solid 10px;'>
+            <br>
+            <b>Kepada Yth. ".$firstname." ".$lastname." ,</b> 
+            <p>Kami informasikan untuk registrasi layanan anda sudah berhasil.</p>
+            <p><b>Detail Layanan</b></p>
+            <p><b>Registered Name</b> : ".$firstname." ".$lastname." </p>
+            <p><b>Registered Email</b> : ".$email."</p>
+            <p>Silakan konfirmasi email anda dengan klik link di bawah : </p>
+            <p align='center'><a href='http://localhost/adminCMS/confirmemail.php?username=".$encryp_username."' class='button-a' target='_blank' ><span><b>Konfimasi Email Sekarang</b></span></a></p>
+            <br>
+          </div>
+    </body>";
     $mail->IsSMTP();  // menggunakan SMTP
     $mail->SMTPDebug  = 1;   // mengaktifkan debug SMTP
     $mail->SMTPSecure = 'tls'; 
     $mail->SMTPAuth   = true;   // mengaktifkan Autentifikasi SMTP
-    $mail->Host   = 'smtp.gmail.com'; // host sesuaikan dengan hosting mail anda
+    $mail->Host       = 'smtp.gmail.com'; // host sesuaikan dengan hosting mail anda
     $mail->Port       = 587;  // post gunakan port 25
-    $mail->Username   = ""; // username email akun
-    $mail->Password   = "";        // password akun
+    $mail->Username   = "mustafidatunnashihah@gmail.com"; // username email akun
+    $mail->Password   = "fida2012.";        // password akun
 
-    $mail->SetFrom('', 'Hello imax');
+    $mail->SetFrom('mustafidatunnashihah@gmail.com', 'PT. Citra Media Solusindo');
 
 
-    $mail->Subject    = "Aktivasi Email User";
+    $mail->Subject    = "Verifikasi Email";
     $mail->MsgHTML($body);
 
     $address = $email; //email tujuan
-    $mail->AddAddress($address, "Hello (Reciever name)");
+    $mail->AddAddress($address, "Hello ( ".$firstname." ".$lastname." )");
     $mail->Send();
     }
     //end verifikasi Email
 
-
+        $ng_customercheck=NULL;
         if($oldidentitas != $identitas){
           $ng_customercheck = mysqli_query($connectdb, "SELECT identitas FROM ng_customer WHERE identitas =\"$identitas\"");
         }
 
+        $ng_emailcheck=NULL;
         if($oldemail != $email){
-            $ng_emailcheck = mysqli_query($connectdb, "SELECT email FROM ng_customer WHERE email =\"$email\"");
+            $ng_emailcheck = mysqli_query($connectdb, "SELECT email FROM ng_customer WHERE email =\"$email\""); 
         }
 
         if(mysqli_fetch_row($ng_customercheck) == NULL ){
@@ -375,20 +381,17 @@ if (isset($_GET['id'])) {
                                                                 WHERE id = \"$customerid\"") ; 
                 }
            
-                if($oldpaket != $paket){
-                    $radreply = mysqli_query($connectdb, "UPDATE radreply 
-                                                            INNER JOIN ng_customer ON ng_customer.username = radreply.username 
-                                                            SET value = \"$randaddress\"
-                                                            WHERE ng_customer.id = \"$customerid\"");
-                    
-                    $usedpoolold = mysqli_query($connectdb, "SELECT ng_usedpool.poolid, ng_childpool.available FROM ng_usedpool 
-                                                            INNER JOIN ng_customer ON ng_customer.username = ng_usedpool.username
-                                                            INNER JOIN ng_childpool ON ng_childpool.id = ng_usedpool.poolid
-                                                            WHERE ng_customer.id = \"$customerid\"");
+                if($oldpaket != $paket){                    
+                    $usedpoolold = mysqli_query($connectdb, "SELECT ng_customer.childpool_id, 
+                                                                    ng_childpool.available 
+                                                              FROM ng_customer 
+                                                              INNER JOIN ng_childpool 
+                                                              ON ng_childpool.id = ng_customer.childpool_id
+                                                               WHERE ng_customer.id = \"$customerid\"");
 
                     $getusedpoolold = mysqli_fetch_assoc($usedpoolold);
 
-                    $update_availableold = mysqli_query($connectdb, "UPDATE ng_childpool SET available = ".$getusedpoolold['available']." + 1 WHERE id = ".$getusedpoolold['poolid']."");
+                    $update_availableold = mysqli_query($connectdb, "UPDATE ng_childpool SET available = ".$getusedpoolold['available']." + 1 WHERE id = ".$getusedpoolold['childpool_id']."");
 
                     $available_childpool = mysqli_query($connectdb, "SELECT available FROM ng_childpool WHERE id =\"$randpooid\"");
 
@@ -396,11 +399,10 @@ if (isset($_GET['id'])) {
                 
                     $update_available = mysqli_query($connectdb, "UPDATE ng_childpool SET available = ".$getavailable['available']." - 1 WHERE id = \"$randpooid\"");
 
-                    $ng_usedpool = mysqli_query($connectdb, "UPDATE ng_usedpool 
-                                                                INNER JOIN ng_customer ON ng_customer.username = ng_usedpool.username 
-                                                                SET poolid = \"$randpooid\",
-                                                                    address = \"$randaddress\"
-                                                                WHERE ng_customer.id = \"$customerid\"");
+                    $ng_usedpool = mysqli_query($connectdb, "UPDATE ng_customer 
+                                                                SET childpool_id = \"$randpooid\",
+                                                                    ip_address = \"$randaddress\"
+                                                                WHERE id = \"$customerid\""); 
                 }
                 
                 if($oldemail != $email){
@@ -408,12 +410,12 @@ if (isset($_GET['id'])) {
                 }
 
         }else{ //jika data email sudah ada
-            echo '<script language="javascript">alert("Email COBa'. $email.' is registered")</script>';
+            echo '<script language="javascript">alert("Email '. $email.' is registered")</script>';
           }
     }else{ //jika data user sudah ada
             echo '<script language="javascript">alert("User '. $firstname.' '. $lastname .' is registered")</script>';
         }
 
-        echo("<meta http-equiv='refresh' content='1'>"); //Refresh by HTTP META 
+       // echo("<meta http-equiv='refresh' content='1'>"); //Refresh by HTTP META 
    }
   ?>

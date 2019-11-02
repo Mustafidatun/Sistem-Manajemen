@@ -9,9 +9,10 @@ $vendorlist = mysqli_query($connectdb, "SELECT id, vendor FROM ng_vendor");
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>AdminLTE 3 | General Form Elements</title>
+  <title>Admin CMS</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="images/logo_cms.jpg" type="image/ico" />
 
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.css">
@@ -39,8 +40,6 @@ $vendorlist = mysqli_query($connectdb, "SELECT id, vendor FROM ng_vendor");
           include 'include/sidebar_manager.php';
         }else if($_SESSION['level'] == 2){
           include 'include/sidebar_submanager.php';
-        }else if($_SESSION['level'] == 5){
-          include './include/sidebar_fieldtec.php';
         }else if($_SESSION['level'] == 10){
           include './include/sidebar_finance.php';
         }else if($_SESSION['level'] == 11){
@@ -58,12 +57,12 @@ $vendorlist = mysqli_query($connectdb, "SELECT id, vendor FROM ng_vendor");
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Manager Registration</h1>
+            <h1>Create Internal Memo</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Manager Registration</li>
+              <li class="breadcrumb-item"><a href="index.php">Home</a></li>
+              <li class="breadcrumb-item active">Create Internal Memo</li>
             </ol>
           </div>
         </div>
@@ -80,51 +79,51 @@ $vendorlist = mysqli_query($connectdb, "SELECT id, vendor FROM ng_vendor");
               </div>
               <!-- /.card-header -->
               <!-- form start -->
-              <form role="form" action="#" method=post >
-                <div class="card-body">
-                  <div class="form-group">
-                    <label>Vendor</label>
-                    <select id="vendor" class="form-control" name="vendor">
+              <form class="form-horizontal form-label-left" action="#" method="post" novalidate>
+                <div class="item form-group">
+                  <label class="control-label col-md-1 col-sm-3 col-xs-12" for="vendor">Vendor <span class="required">*</span>
+                  </label>
+                  <div class="col-md-3 col-sm-3 col-xs-3">
+                    <select id="vendor" type="option" class="form-control col-md-7 col-xs-12" name="vendor" required>
                       <option value=''>Pilih</option>
-                      <?php 
-                          while ($dtvendor = mysqli_fetch_array($vendorlist))
-                          {
-                              echo "<option value=".$dtvendor['id'].">".$dtvendor['vendor']."</option>";
+                        <?php 
+                          while($dtvendor = mysqli_fetch_array($vendorlist)){
+                            echo "<option value=".$dtvendor['id'].">".$dtvendor['vendor']."</option>";
                           }
-                      ?>   
+                        ?>   
                     </select>
                   </div>
-                  <div id="insert-form">
-                              <table>
-                                  <thead>
-                                      <tr>
-                                          <th>Type</th>
-                                          <th>Merk</th>
-                                          <th>Price</th>
-                                          <th>Qty</th>
-                                          <th>Total</th>
-                                      </tr>
-                                  </thead>
-                                  <tbody>
-                                  </tbody>
-                                  <tfoot>
-                                      <tr>
-                                          <td><button type="button" id="btn-tambah-form"> +add</button></td>
-                                          <td></td>
-                                          <td></td>
-                                          <td>Total</td>
-                                          <td><input type="text" size="8" class="grdtot" id="grandtt" value="" name="" readonly/></input></td>
-                                      </tr>
-                                  </tfoot>
-                              </table>
-                          </div>
-
-                          <div class="form-group">            
-                              <button id="send" type="submit" class="btn btn-success">Submit</button>  
-                          </div>
-                      </form>
-
-                      <input type="hidden" id="jumlah-form" value="0">
+                </div>
+                <div id="insert-form">
+                                            <table id="datatable-fixed-header" class="table table-striped table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                    <th>Type</th>
+                                                    <th>Merk</th>
+                                                    <th>Price</th>
+                                                    <th>Qty</th>
+                                                    <th>Total</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="xx_t">
+                        
+                                                </tbody>
+                                                <tfoot>
+                                                    <tr>
+                                                    <td><button type="button" id="btn-tambah-form" class="btn btn-info btn-xs"> +add</button></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td>Total</td>
+                                                    <td><input type="text" size="8" class="grdtot" id="grandtt" value="" name="" readonly/></input></td>
+                                                    </tr>
+                                                </tfoot>
+                                            </table>
+                                        </div>
+                                        <div class="form-group">                                           
+                                            <button id="send" type="submit" class="btn btn-success">Submit</button>  
+                                        </div>
+                                    </form>
+                                    <input type="hidden" id="jumlah-form" value="0">
               </div>
               <!-- /.card-body -->
             </div>
@@ -161,8 +160,12 @@ $vendorlist = mysqli_query($connectdb, "SELECT id, vendor FROM ng_vendor");
         $(document).ready(function(){
             var dtvendor = document.getElementById('vendor');
             var tot = 0;
+      $('table tbody tr').remove();
+      $('.dataTables_length').remove();
+      $('.dataTables_filter').remove();
+      $('.dataTables_paginate').remove();
+      $('.dataTables_info').remove();
             $("#btn-tambah-form").click(function(){ 
-              alert(dtvendor);
                 if (dtvendor.value !== '') {
                     var jumlah = parseInt($("#jumlah-form").val()); 
                     var nextform = jumlah + 1; 
@@ -175,9 +178,8 @@ $vendorlist = mysqli_query($connectdb, "SELECT id, vendor FROM ng_vendor");
                         "<td><input type='text' id='sub_total"+nextform+"' name='sub_total' class='subtot'  placeholder='Sub Total' value='0' readonly><button style='margin-left:15px;' type='button' class='btn btn-danger btn-xs' id='btnremove"+nextform+"'>delete</button></td>"
                         "</tr>"
                     $("table tbody").append(inside);
-
                     $( "#type"+nextform ).autocomplete({
-                            serviceUrl: "autocomplete_typebarang.php?vendor=" + dtvendor.value +"&",  
+                            serviceUrl: "autocomplete_typebarang.php?vendor=" + dtvendor.value +"&",    
                             dataType: "JSON",           
                             onSelect: function (suggestion) {
                                 $( "#equipmasterid"+nextform ).val("" + suggestion.equipmasterid);
@@ -185,8 +187,7 @@ $vendorlist = mysqli_query($connectdb, "SELECT id, vendor FROM ng_vendor");
                                 $( "#merk"+nextform ).val("" + suggestion.merk);
                                 $( "#price"+nextform).val("" + suggestion.price);
                             }
-                    });
-
+                        });
                     $("#btnremove"+nextform).click(function(){
                         var subtotal = document.getElementById('sub_total'+nextform).value;
                         var total = document.getElementById('grandtt').value;
@@ -195,8 +196,7 @@ $vendorlist = mysqli_query($connectdb, "SELECT id, vendor FROM ng_vendor");
                         $('.grdtot').val(updatetotal.toFixed(0));
                         $('#row'+nextform).remove();
                     });
-
-                    var $tblrows = $("tbody tr");
+                    var $tblrows = $("#datatable-fixed-header tbody tr");
                     $tblrows.each(function (index) {
                     var $tblrow = $(this);
                     $(document).on('keyup', '#qty'+nextform, function() {
@@ -239,16 +239,15 @@ $vendorlist = mysqli_query($connectdb, "SELECT id, vendor FROM ng_vendor");
 
 </body>
 </html> 
-         <?php
+        <?php
             if($_SERVER["REQUEST_METHOD"] == "POST") {
         
                 $jmlmemo = mysqli_query($connectdb, "SELECT SUM(DISTINCT memoid) AS jmlmemo FROM ng_internalmemo GROUP BY memoid ORDER BY memoid DESC LIMIT 1");
                 $dtjmlmemo = mysqli_fetch_array($jmlmemo);
                 $dtbarang = $_POST['inputs'];
-                $purchasingid = $_SESSION['managerid'];
+                $purchasingid = $_SESSION['userid'];
                 $date = date("Y-m-d");
                 $memoid = ($dtjmlmemo['jmlmemo']+1).'/IM/'.date('m').'/'.date('Y');
-
             foreach ($dtbarang as $dt){
                     $equipmasterid = $dt['equipmasterid'];
                     $price = $dt['price'];

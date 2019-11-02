@@ -3,7 +3,7 @@ include "database/koneksi.php";
 include "database/check.php";
 
 
-$managerid = $_SESSION['managerid'];
+$userid = $_SESSION['userid'];
 $n=10; 
 function rdpass($n) { 
     $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'; 
@@ -23,9 +23,10 @@ function rdpass($n) {
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>AdminLTE 3 | General Form Elements</title>
+  <title>Admin CMS</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="images/logo_cms.jpg" type="image/ico" />
 
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.css">
@@ -53,8 +54,6 @@ function rdpass($n) {
           include 'include/sidebar_manager.php';
         }else if($_SESSION['level'] == 2){
           include 'include/sidebar_submanager.php';
-        }else if($_SESSION['level'] == 5){
-          include './include/sidebar_fieldtec.php';
         }else if($_SESSION['level'] == 10){
           include './include/sidebar_finance.php';
         }else if($_SESSION['level'] == 11){
@@ -72,12 +71,12 @@ function rdpass($n) {
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Manager Registration</h1>
+            <h1>Create Sub Manager</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Manager Registration</li>
+              <li class="breadcrumb-item"><a href="index.php">Home</a></li>
+              <li class="breadcrumb-item active">Create Sub Manager</li>
             </ol>
           </div>
         </div>
@@ -90,7 +89,7 @@ function rdpass($n) {
             <!-- general form elements -->
             <div class="card card-primary">
               <div class="card-header">
-                <h3 class="card-title">Form</h3>
+                <h3 class="card-title">Form Sub Manager</h3>
               </div>
               <!-- /.card-header -->
               <!-- form start -->
@@ -98,17 +97,17 @@ function rdpass($n) {
                 <div class="card-body">
                   <div class="form-group">
                     <label for="inputUsername">Username</label>
-                    <input type="text" class="form-control" id="inputUsername"placeholder="Input Username" name="username">
+                    <input type="text" class="form-control" id="inputUsername"placeholder="Input Username" name="username" required>
                   </div>
                   <div class="form-group">
                     <label for="inputEmail">E-mail</label>
-                    <input type="email" class="form-control" id="inputEmail" placeholder="Input E-mail" name="email">
+                    <input type="email" class="form-control" id="inputEmail" placeholder="Input E-mail" name="email" required>
                   </div>
                   <div class="form-group">
                     <label for="inputFile">Foto</label>
                     <div class="input-group">
                       <div class="custom-file">
-                        <input type="file" class="custom-file-input" id="inputFile" name="image-file">
+                        <input type="file" class="custom-file-input" id="inputFile" name="image-file" required>
                         <label class="custom-file-label" for="inputFile">Choose file</label>
                       </div>
                     </div>
@@ -146,6 +145,7 @@ function rdpass($n) {
 <!-- jQuery -->
 <script src="https://kit.fontawesome.com/bd16c6b546.js"></script>
 <script src="./js/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js"></script>
 <!-- Bootstrap -->
 <script src="./js/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- AdminLTE -->
@@ -153,6 +153,11 @@ function rdpass($n) {
 
 <!-- OPTIONAL SCRIPTS -->
 <script src="./js/demo.js"></script>
+<script>
+  $(document).ready(function () {
+  bsCustomFileInput.init()
+  })
+</script>
 </body>
 </html>
 
@@ -176,20 +181,20 @@ function rdpass($n) {
                                                     FROM ng_submanager 
                                                     WHERE username =\"$username\" OR email =\"$email\"");
 
-    if(mysqli_fetch_row($ng_managercheck) == NULL ){
+    if(mysqli_fetch_row($ng_submanagercheck) == NULL ){
        if (!empty($_FILES['image-file']['name'])) {
               if($type_photo == "image/jpg" || $type_photo == "image/png" || $type_photo == "image/jpeg"){
                             if($size_photo <= 10000000){
                                 if(move_uploaded_file($temp_photo,$path)){
 
-                      $ng_submanager = mysqli_query($connectdb, "INSERT INTO ng_submanager (username,password,email,foto, managerid) VALUES (\"$username\" ,\"$password\", \"$email\", \"$name_photo\", \"$managerid\")");
+                      $ng_submanager = mysqli_query($connectdb, "INSERT INTO ng_submanager (username,password,email,foto, userid) VALUES (\"$username\" ,\"$password\", \"$email\", \"$name_photo\", \"$userid\")");
                 
                 $ng_submanagercheckid = mysqli_query($connectdb, "SELECT id FROM ng_submanager WHERE username=\"$username\" AND password=\"$password\" AND email=\"$email\"");
 
                 $getid = mysqli_fetch_assoc($ng_submanagercheckid);
                 $id = $getid['id'];
 
-                            $ng_userlogin = mysqli_query($connectdb, "INSERT INTO ng_userlogin (username,password,managerid,level) VALUES (\"$username\" ,\"$password\", \"$id\", \"2\")");
+                            $ng_userlogin = mysqli_query($connectdb, "INSERT INTO ng_userlogin (username,password,userid,level) VALUES (\"$username\" ,\"$password\", \"$id\", \"2\")");
                 
                             verifikasiEmail($username,$password,$email);
 

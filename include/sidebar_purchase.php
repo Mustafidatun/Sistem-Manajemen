@@ -16,7 +16,7 @@
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
           <li class="nav-item">
-            <a href="index.html" class="nav-link active">
+            <a href="index.php" class="nav-link active">
               <i class="nav-icon fas fa-home"></i>
               <p>
                 Dashboard
@@ -25,7 +25,7 @@
           </li>
           <li class="nav-item has-treeview">
             <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-tachometer-alt"></i>
+              <i class="nav-icon fas fa-object-ungroup"></i>
               <p>
                  Vendor
                 <i class="right fas fa-angle-left"></i>
@@ -48,9 +48,9 @@
           </li>
           <li class="nav-item has-treeview">
             <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-tachometer-alt"></i>
+              <i class="nav-icon fas fa-box-open"></i>
               <p>
-                 Master Equipment
+                 Master Barang
                 <i class="right fas fa-angle-left"></i>
               </p>
             </a>
@@ -58,20 +58,20 @@
               <li class="nav-item">
                 <a href="masterbrglist.php" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Master Equipment List</p>
+                  <p>Master Barang List</p>
                 </a>
               </li>
               <li class="nav-item">
                 <a href="masterbrg.php" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Master Equipment Registration</p>
+                  <p>Create Master Barang</p>
                 </a>
               </li>
             </ul>
           </li>
           <li class="nav-item has-treeview">
             <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-tachometer-alt"></i>
+              <i class="nav-icon fas fa-sticky-note"></i>
               <p>
                  Internal Memo
                 <i class="right fas fa-angle-left"></i>
@@ -87,7 +87,7 @@
               <li class="nav-item">
                 <a href="imemo.php" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Internal Memo Registration</p>
+                  <p>Create Internal Memo</p>
                 </a>
               </li>
             </ul>

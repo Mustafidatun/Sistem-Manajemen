@@ -2,18 +2,32 @@
 include "database/koneksi.php";
 include "database/check.php";
 
-$managerid = $_SESSION['managerid'];
+$userid = $_SESSION['userid'];
 
+if($_SESSION['level'] == 0){
+  $memolist = mysqli_query($connectdb, "SELECT DISTINCT ng_internalmemo.memoid, 
+                                            date, 
+                                            status,
+                                            SUM(ng_internalmemo.price*ng_internalmemo.quantity)AS total, 
+                                            ng_vendor.vendor
+                                      FROM ng_internalmemo 
+                                      INNER JOIN ng_equipmaster ON ng_equipmaster.id = ng_internalmemo.equipmasterid
+                                      INNER JOIN ng_vendor ON ng_vendor.id = ng_equipmaster.vendorid
+                                      INNER JOIN ng_userlogin ON ng_userlogin.userid = ng_internalmemo.purchasingid
+                                      GROUP BY memoid ORDER BY date ASC");
+}else if($_SESSION['level'] == 11){
 $memolist = mysqli_query($connectdb, "SELECT DISTINCT ng_internalmemo.memoid, 
                                             date, 
+                                            status,
                                             SUM(ng_internalmemo.price*ng_internalmemo.quantity)AS total, 
                                             ng_vendor.vendor 
                                       FROM ng_internalmemo 
                                       INNER JOIN ng_equipmaster ON ng_equipmaster.id = ng_internalmemo.equipmasterid
                                       INNER JOIN ng_vendor ON ng_vendor.id = ng_equipmaster.vendorid
-                                      INNER JOIN ng_userlogin ON ng_userlogin.managerid = ng_internalmemo.purchasingid
-                                      WHERE purchasingid = \"$managerid\"
+                                      INNER JOIN ng_userlogin ON ng_userlogin.userid = ng_internalmemo.purchasingid
+                                      WHERE purchasingid = \"$userid\"
                                       GROUP BY memoid ORDER BY date ASC");
+}
 
 ?>
 
@@ -22,9 +36,10 @@ $memolist = mysqli_query($connectdb, "SELECT DISTINCT ng_internalmemo.memoid,
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>AdminLTE 3 | DataTables</title>
+  <title>Admin CMS</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="images/logo_cms.jpg" type="image/ico" />
 
 <!-- Font Awesome Icons -->
   <script src="https://kit.fontawesome.com/bd16c6b546.js"></script>
@@ -56,8 +71,6 @@ $memolist = mysqli_query($connectdb, "SELECT DISTINCT ng_internalmemo.memoid,
           include 'include/sidebar_manager.php';
         }else if($_SESSION['level'] == 2){
           include 'include/sidebar_submanager.php';
-        }else if($_SESSION['level'] == 5){
-          include './include/sidebar_fieldtec.php';
         }else if($_SESSION['level'] == 10){
           include './include/sidebar_finance.php';
         }else if($_SESSION['level'] == 11){
@@ -75,12 +88,12 @@ $memolist = mysqli_query($connectdb, "SELECT DISTINCT ng_internalmemo.memoid,
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>DataTables</h1>
+            <h1>Internal Memo List</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">DataTables</li>
+              <li class="breadcrumb-item"><a href="index.php">Home</a></li>
+              <li class="breadcrumb-item active">Internal Memo List</li>
             </ol>
           </div>
         </div>
@@ -94,9 +107,6 @@ $memolist = mysqli_query($connectdb, "SELECT DISTINCT ng_internalmemo.memoid,
         <div class="col-12">
 
           <div class="card">
-            <div class="card-header">
-              <h3 class="card-title">DataTable with default features</h3>
-            </div>
             <!-- /.card-header -->
             <div class="card-body">
               <table id="example1" class="table table-bordered table-striped">
@@ -104,6 +114,9 @@ $memolist = mysqli_query($connectdb, "SELECT DISTINCT ng_internalmemo.memoid,
                   <tr>
                     <th>Memo Number</th>
                     <th>Date</th>
+                    <th>Created</th>
+                    <th>Manager</th>
+                    <th>Finance</th>
                     <th>Total</th>
                     <th>Detail Memo</th>
                   </tr>
@@ -113,8 +126,11 @@ $memolist = mysqli_query($connectdb, "SELECT DISTINCT ng_internalmemo.memoid,
 
                     <tr>
                       <td><?php echo $dtmemo['memoid']; ?></td>
-                      <td><?php echo $dtmemo['date']; ?></td>
-                      <td align="left"><?php echo $dtmemo['total']; ?></td>
+                      <td><?php echo date('d F Y', strtotime($dtmemo['date'])); ?></td>
+                      <td><?php if ($dtmemo['status']>=0 ){echo "<b>OK</b>";}else{echo "<b>Not OK</b>";} ?></td>
+                      <td><?php if ($dtmemo['status']>=1 ){echo "<b>OK</b>";}else{echo "<font color=red><b>Not OK</b></font>";} ?></td>
+                      <td><?php if ($dtmemo['status']>=2 ){echo "<b>OK</b>";}else{echo "<font color=red><b>Not OK</b></font>";} ?></td>
+                      <td align="left"><?php echo number_format($dtmemo['total']); ?></td>
                       <td><button id="send" type="submit" class="btn btn-block btn-primary btn-sm" onclick="location.href = 'imemodetail.php?memoid=<?php echo $dtmemo['memoid']; ?>&vendor=<?php echo $dtmemo['vendor']; ?>&date=<?php echo $dtmemo['date']; ?>'">Detail</button>
                       </td>
                     </tr>

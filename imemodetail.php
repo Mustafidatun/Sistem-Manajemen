@@ -16,13 +16,13 @@ if($_GET['memoid'] <> "" || $_GET['vendor'] <> "" || $_GET['date'] <> ""){
                                               ng_internalmemo.status,
                                               IFNULL(ng_userlogin.username, '-') AS username_im, 
                                               IFNULL(ng_internalmemo.approve_date, '-') AS approve_date, 
-                                              IFNULL(ng_manager.username, '-') AS username_po, 
+                                              IFNULL(ng_user.username, '-') AS username_po, 
                                               ng_vendor.id
                                           FROM ng_internalmemo 
                                           INNER JOIN ng_equipmaster ON ng_equipmaster.id = ng_internalmemo.equipmasterid
                                           INNER JOIN ng_vendor ON ng_vendor.id = ng_equipmaster.vendorid
                                           LEFT JOIN ng_userlogin ON  ng_userlogin.id = ng_internalmemo.userid 
-                                          LEFT JOIN ng_manager ON ng_manager.id = ng_internalmemo.financeid
+                                          LEFT JOIN ng_user ON ng_user.id = ng_internalmemo.financeid
                                           WHERE ng_internalmemo.memoid = \"$memoid\" AND 
                                                 ng_internalmemo.date = \"$date\" AND 
                                                 ng_vendor.vendor = \"$vendor\"");
@@ -54,9 +54,10 @@ if($_GET['memoid'] <> "" || $_GET['vendor'] <> "" || $_GET['date'] <> ""){
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>AdminLTE 3 | DataTables</title>
+  <title>Admin CMS</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="images/logo_cms.jpg" type="image/ico" />
 
 <!-- Font Awesome Icons -->
   <script src="https://kit.fontawesome.com/bd16c6b546.js"></script>
@@ -88,8 +89,6 @@ if($_GET['memoid'] <> "" || $_GET['vendor'] <> "" || $_GET['date'] <> ""){
           include 'include/sidebar_manager.php';
         }else if($_SESSION['level'] == 2){
           include 'include/sidebar_submanager.php';
-        }else if($_SESSION['level'] == 5){
-          include './include/sidebar_fieldtec.php';
         }else if($_SESSION['level'] == 10){
           include './include/sidebar_finance.php';
         }else if($_SESSION['level'] == 11){
@@ -107,12 +106,12 @@ if($_GET['memoid'] <> "" || $_GET['vendor'] <> "" || $_GET['date'] <> ""){
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>DataTables</h1>
+            <h1>Internal Memo Detail</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">DataTables</li>
+              <li class="breadcrumb-item"><a href="index.php">Home</a></li>
+              <li class="breadcrumb-item active">Internal Memo Detail</li>
             </ol>
           </div>
         </div>
@@ -126,38 +125,53 @@ if($_GET['memoid'] <> "" || $_GET['vendor'] <> "" || $_GET['date'] <> ""){
         <div class="col-12">
 
           <div class="card">
-            <div class="card-header">
-              <h3 class="card-title">DataTable with default features</h3>
-            </div>
             <!-- /.card-header -->
-            <div class="card-body">
-              <table>
-                <tr>
-                  <td><label class="control-label" >Memo Id</label></td>
-                  <td> : </td>
-                  <td><?php echo $memoid; ?></td>
-                </tr>
-                <tr>
-                  <td><label class="control-label" >Vendor</label></td>
-                  <td> : </td>
-                  <td><?php echo $vendor;?></td>
-                </tr>
-                <tr>
-                  <td><label class="control-label" >Date</label></td>
-                  <td> : </td>
-                  <td><?php echo date('d F Y', strtotime($date));?></td>
-                </tr>
-                <tr>
-                  <td><label class="control-label" >Proses</label></td>
-                  <td> : </td>
-                  <td>
-                    <div class="progress progress-xs progress-striped active">
-                      <div class="progress-bar bg-primary" style="width: <?php echo $persen ?>"></div>
+             <div class="card-body">
+              <div class="col-12 mt-5 mb-5 ml-0">
+                <div class="row">
+                  <div class="col-6">
+                    <div class="col-md-12 ml-auto">
+                      <div class="row">
+                        <p class="col-md-2 font-weight-bold">Memo Id </p>
+                        <p class="col-md-10 p-0"><?php echo $memoid; ?></p>
+                      </div>
                     </div>
-                    <span class="badge bg-primary"><?php echo $persen ?></span>
-                  </td>
-                </tr>
-              </table>
+                    <div class="col-md-12 ml-auto">
+                      <div class="row">
+                        <p class="col-md-2 font-weight-bold">Vendor </p>
+                        <p class="col-md-10 p-0"><?php echo $vendor; ?></p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="col-md-12 ml-auto">
+                      <div class="row">
+                        <p class="col-md-2 font-weight-bold">Date </p>
+                        <p class="col-md-10 p-0"><?php echo date('d F Y', strtotime($date));?></p>
+                      </div>
+                    </div>
+                    <div class="col-md-12 ml-auto">
+                      <div class="row">
+                        <p class="col-md-2 font-weight-bold">Progress </p>
+                        <div class="progress progress-xs progress-striped active col-md-3 m-2">
+                          <div class="progress-bar bg-primary" style="width: <?php echo $persen ?>"></div>
+                        </div>
+                        <div class="col-md-6">
+                          <span class="badge bg-primary m-1"><?php echo $persen ?></span>
+                        </div>
+                        
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <?php if($status['status'] == 2) { ?>
+              <div class="col-md-6 mt-1 mb-5">
+                <button id='send' type='submit' class="btn btn-primary btn-sm" onclick="location.href = 'purchaseorderreg.php?memoid=<?php echo $memoid; ?>'">Purchase Order</button>
+              </div>
+                                
+              <?php } ?>
 
               <table id="example1" class="table table-bordered table-striped">
                 <thead>
@@ -196,10 +210,10 @@ if($_GET['memoid'] <> "" || $_GET['vendor'] <> "" || $_GET['date'] <> ""){
                     <td><?php echo $dtmemo['approve_date']; ?></td>
                     <td><?php echo $dtmemo['username_im']; ?></td>
                     <td><?php echo $dtmemo['username_po']; ?></td>
-                    <td align="right"><?php echo $dtmemo['price']; ?></td>
+                    <td align="right"><?php echo number_format($dtmemo['price']); ?></td>
                     <td size="3"><?php echo $dtmemo['quantity']; ?></td>
                     <td><?php echo $dtmemo['vol']; ?></td>
-                    <td align="right"><?php echo $dtmemo['subtotal']; ?></td>
+                    <td align="right"><?php echo number_format($dtmemo['subtotal']); ?></td>
                   </tr>
                         
                   <?php } ?>
@@ -220,12 +234,6 @@ if($_GET['memoid'] <> "" || $_GET['vendor'] <> "" || $_GET['date'] <> ""){
                   </tr>
                 </tfoot>
               </table>
-
-              <?php if($status['status'] == 2) { ?>
-    
-                <button id='send' type='submit' class="btn btn-primary btn-sm" onclick="location.href = 'purchaseorderreg.php?memoid=<?php echo $memoid; ?>'">Purchase Order</button>
-                                
-              <?php } ?>
 
             </div>
             <!-- /.card-body -->

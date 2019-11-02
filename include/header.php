@@ -2,14 +2,14 @@
 include "database/koneksi.php";
 // include "database/check.php";
 
-$managerid = $_SESSION['managerid'];
+$userid = $_SESSION['userid'];
 if($_SESSION['level'] <> 0){
   if($_SESSION['level'] == 1 || $_SESSION['level'] == 5 || $_SESSION['level'] == 10 || $_SESSION['level'] == 11){
     //manager, fieldtech, finance, purchasing 
-    $dtfoto = mysqli_query($connectdb, "SELECT foto FROM `ng_manager` WHERE id = \"$managerid\"");
+    $dtfoto = mysqli_query($connectdb, "SELECT foto FROM `ng_user` WHERE id = \"$userid\"");
   }else if($_SESSION['level'] == 2){
     //submanager
-    $dtfoto = mysqli_query($connectdb, "SELECT foto FROM `ng_submanager` WHERE id = \"$managerid\"");  
+    $dtfoto = mysqli_query($connectdb, "SELECT foto FROM `ng_submanager` WHERE id = \"$userid\"");  
   }
   $foto = mysqli_fetch_assoc($dtfoto);
   $foto = "./foto/$foto[foto]";
@@ -37,11 +37,13 @@ if($_SESSION['level'] <> 0){
         </a>
 
         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+          <?php if($_SESSION['level'] <> 0){ ?>
           <a href="./profil.php" class="dropdown-item">
             <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i> 
             Profile
           </a>
           <div class="dropdown-divider"></div>
+          <?php } ?>
           <a href="./login.php" class="dropdown-item">
             <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i> 
             Logout

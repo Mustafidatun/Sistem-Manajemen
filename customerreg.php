@@ -2,7 +2,7 @@
 include "database/koneksi.php";
 include "database/check.php";
 
-$userid = $_SESSION['userid'];
+$userloginid = $_SESSION['userloginid'];
 
 $user = mysqli_query($connectdb, "SELECT * FROM ng_customer");
 $kota = mysqli_query($connectdb, "SELECT * FROM ng_kota");
@@ -31,9 +31,10 @@ function rdpass($n) {
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>AdminLTE 3 | General Form Elements</title>
+  <title>Admin CMS</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="images/logo_cms.jpg" type="image/ico" />
 
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.css">
@@ -61,13 +62,7 @@ function rdpass($n) {
           include 'include/sidebar_manager.php';
         }else if($_SESSION['level'] == 2){
           include 'include/sidebar_submanager.php';
-        }else if($_SESSION['level'] == 5){
-          include './include/sidebar_fieldtec.php';
-        }else if($_SESSION['level'] == 10){
-          include './include/sidebar_finance.php';
-        }else if($_SESSION['level'] == 11){
-          include './include/sidebar_purchase.php';
-        }else if($_SESSION['level'] == ""){
+        }else if($_SESSION['level'] == "" || $_SESSION['level'] == 10 || $_SESSION['level'] == 11){
           include 'page_404.html'; 
         }
       ?>
@@ -80,12 +75,12 @@ function rdpass($n) {
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Manager Registration</h1>
+            <h1>Create Customer</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Manager Registration</li>
+              <li class="breadcrumb-item"><a href="index.php">Home</a></li>
+              <li class="breadcrumb-item active">Create Customer</li>
             </ol>
           </div>
         </div>
@@ -98,7 +93,7 @@ function rdpass($n) {
             <!-- general form elements -->
             <div class="card card-primary">
               <div class="card-header">
-                <h3 class="card-title">Form</h3>
+                <h3 class="card-title">Form Customer</h3>
               </div>
               <!-- /.card-header -->
               <!-- form start -->
@@ -106,15 +101,15 @@ function rdpass($n) {
                 <div class="card-body">
                   <div class="form-group">
                     <label for="inputFirstName">First Name</label>
-                    <input type="text" class="form-control" id="inputFirstName" placeholder="Input First Name" name="firstname">
+                    <input type="text" class="form-control" id="inputFirstName" placeholder="Input First Name" name="firstname" required>
                   </div>
                   <div class="form-group">
                     <label for="inputLastname">Last Name</label>
-                    <input type="text" class="form-control" id="inputLastname" placeholder="Input Last Name" name="lastname">
+                    <input type="text" class="form-control" id="inputLastname" placeholder="Input Last Name" name="lastname" required>
                   </div>
                   <div class="form-group">
                     <label>Kota</label>
-                    <select id="kota" class="form-control" name="kota">
+                    <select id="kota" class="form-control" name="kota" required>
                       <option value=''>Pilih</option>
                       <?php 
                         while ($col = mysqli_fetch_array($kota))
@@ -126,37 +121,37 @@ function rdpass($n) {
                   </div>
                   <div class="form-group">
                     <label>Node</label>
-                    <select id="node" class="form-control" name="node">
+                    <select id="node" class="form-control" name="node" required>
                       <option value=''>Pilih</option>
                     </select>
                   </div>
                   <div class="form-group">
                     <label>Paket</label>
-                    <select id="paket" class="form-control" name="paket">
+                    <select id="paket" class="form-control" name="paket" required>
                       <option value=''>Pilih</option>
                     </select>
                   </div>
                   <div class="form-group">
                     <label for="inputAddress">Alamat</label>
-                    <input type="text" class="form-control" id="inputAddress" placeholder="Input Address" name="alamat">
+                    <input type="text" class="form-control" id="inputAddress" placeholder="Input Address" name="alamat" required>
                   </div>
                   <div class="form-group">
                     <label for="inputEmail">E-mail</label>
-                    <input type="email" class="form-control" id="inputEmail" placeholder="Input E-mail" name="email">
+                    <input type="email" class="form-control" id="inputEmail" placeholder="Input E-mail" name="email" required>
                   </div>
                   <div class="form-group">
                     <label for="inputNoTelp">No. Telp</label>
-                    <input type="tel" class="form-control" id="inputNoTelp" placeholder="Input Telephone Number" name="no_telp">
+                    <input type="tel" class="form-control" id="inputNoTelp" placeholder="Input Telephone Number" name="no_telp" required>
                   </div>
                   <div class="form-group">
                     <label for="inputIdentitas">No. Identitas</label>
-                    <input type="number" class="form-control" id="inputNoTelp" placeholder="Input ID Number KTP/SIM/Pasport" name="identitas">
+                    <input type="number" class="form-control" id="inputNoTelp" placeholder="Input ID Number KTP/SIM/Pasport" name="identitas" required>
                   </div>
                   <div class="form-group">
                     <label for="inputFile">Upload KTP/SIM/Pasport</label>
                     <div class="input-group">
                       <div class="custom-file">
-                        <input type="file" class="custom-file-input" id="inputFile" name="image-file">
+                        <input type="file" class="custom-file-input" id="inputFile" name="image-file" required>
                         <label class="custom-file-label" for="inputFile">Choose file</label>
                       </div>
                     </div>
@@ -164,7 +159,7 @@ function rdpass($n) {
                 </div>
                 <!-- /.card-body -->
                 <div class="card-footer">
-                  <button type="submit" class="btn btn-primary">Submit</button>
+                  <button type="submit" name="save" class="btn btn-primary">Submit</button>
                   <button type="reset" class="btn btn-default float-right">Cancel</button>
                 </div>
               </form>
@@ -194,6 +189,7 @@ function rdpass($n) {
 <!-- jQuery -->
 <script src="https://kit.fontawesome.com/bd16c6b546.js"></script>
 <script src="./js/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js"></script>
 <!-- Bootstrap -->
 <script src="./js/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- AdminLTE -->
@@ -207,7 +203,7 @@ function rdpass($n) {
     $("#kota").change(function(){ 
     $.ajax({
       type: "POST", 
-      url: "func.php", 
+      url: "selection.php", 
       data: {kota : $("#kota").val()}, 
       dataType: "json",
       beforeSend: function(e) {
@@ -227,7 +223,7 @@ function rdpass($n) {
   $("#node").change(function(){ 
     $.ajax({
           type: "POST", 
-          url: "func.php", 
+          url: "selection.php", 
           data: {node : $("#node").val()}, 
           dataType: "json",
           beforeSend: function(e) {
@@ -245,6 +241,9 @@ function rdpass($n) {
     });
     });
 
+    $(document).ready(function () {
+    bsCustomFileInput.init()
+    });
     </script>
 </body>
 </html>
@@ -281,11 +280,12 @@ function rdpass($n) {
                           FROM ng_childpool, ng_paket 
                           WHERE ng_childpool.kd_prod=ng_paket.kd_prod AND ng_paket.id='".$paket."'");
 
-    $ng_usedpoolcheck = mysqli_query($connectdb, "SELECT address FROM ng_usedpool");
-    $getusedpool = mysqli_fetch_assoc($ng_usedpoolcheck );
-    
+    $ng_usedpoolcheck = mysqli_query($connectdb, "SELECT ip_address FROM ng_customer");
     $dtusedpool = array();
-    array_push($dtusedpool,$getusedpool['address']);
+    while($getusedpool = mysqli_fetch_assoc($ng_usedpoolcheck )){
+      array_push($dtusedpool,$getusedpool['ip_address']);
+    }
+    print_r($dtusedpool);
     
     function cidr2NetmaskAddr($cidr) {
            $ta = substr($cidr, strpos($cidr, '/') + 1) * 1;
@@ -335,32 +335,34 @@ function rdpass($n) {
     $encryp_username  = base64_encode($username);
     $mail             = new PHPMailer();
     $body             = 
-            "<body style='margin: 10px;'>
-                  <div style='width: 640px; font-family: Helvetica, sans-serif; font-size: 13px; padding:10px; line-height:150%; border:#eaeaea solid 10px;'>
-                    <br>
-                    <strong>Terima Kasih Telah Mendaftar</strong><br>
-                    <b>Nama Anda : </b>".$firstname." ".$lastname."<br>
-                    <b>Email : </b>".$email."<br>
-                    <b>URL Konfirmasi : </b>
-                    <a href='localhost/SI_PKL/confirmemail.php?username=".$encryp_username."'>disini</a><br>
-                    <br>
-                  </div>
-            </body>";
-    // $body             = eregi_replace("[\]",'',$body);
+    "<body style='margin: 10px;'>
+            <div style='width: 640px; font-family: Helvetica, sans-serif; font-size: 13px; padding:10px; line-height:150%; border:#eaeaea solid 10px;'>
+              <br>
+              <b>Kepada Yth. ".$firstname." ".$lastname." ,</b> 
+              <p>Kami informasikan untuk registrasi layanan anda sudah berhasil.</p>
+              <p><b>Detail Layanan</b></p>
+              <p><b>Registered Name</b> : ".$firstname." ".$lastname." </p>
+              <p><b>Registered Email</b> : ".$email."</p>
+              <p>Silakan konfirmasi email anda dengan klik link di bawah : </p>
+              <p align='center'><a href='http://localhost/adminCMS/confirmemail.php?username=".$encryp_username."' class='button-a' target='_blank' ><span><b>Konfimasi Email Sekarang</b></span></a></p>
+              <br>
+            </div>
+      </body>";
     $mail->IsSMTP();  // menggunakan SMTP
     $mail->SMTPDebug  = 1;   // mengaktifkan debug SMTP
     $mail->SMTPSecure = 'tls'; 
     $mail->SMTPAuth   = true;   // mengaktifkan Autentifikasi SMTP
     $mail->Host   = 'smtp.gmail.com'; // host sesuaikan dengan hosting mail anda
     $mail->Port       = 587;  // post gunakan port 25
-    $mail->Username   = "admproduction96@gmail.com"; // username email akun
-    $mail->Password   = "admin2019.";        // password akun
-
-    $mail->SetFrom('admproduction96@gmail.com', 'Verifikasi Email');
-
-    $mail->Subject    = "Verifikasi Email";
+    $mail->Username   = "mustafidatunnashihah@gmail.com"; // username email akun
+    $mail->Password   = "fida2012.";        // password akun
+  
+    $mail->SetFrom('mustafidatunnashihah@gmail.com', 'PT. Citra Media Solusindo');
+  
+  
+    $mail->Subject    = "Aktivasi Email User";
     $mail->MsgHTML($body);
-
+  
     $address = $email; //email tujuan
     $mail->AddAddress($address, "Hello ".$firstname." ".$lastname);
     $mail->Send();
@@ -393,9 +395,11 @@ function rdpass($n) {
                                       identitas,
                                       foto,
                                       register_date,
-                                      userid) 
+                                      userid,
+                                      ip_address,
+                                      childpool_id) 
                                     VALUES (
-                                    \"$firstname\" ,
+                                    \"$firstname\" , 
                                     \"$lastname\" ,
                                     \"$username\" ,
                                     \"$password\" ,
@@ -408,28 +412,9 @@ function rdpass($n) {
                                     \"$identitas\" ,
                                     \"$name_photo\" ,
                                     \"$register_date\" ,
-                                    \"$userid\")") ; 
-             
-                $radcheck = mysqli_query($connectdb, "INSERT INTO radcheck (
-                                      username,
-                                      attribute,
-                                      op,
-                                      value) 
-                                    VALUES (
-                                      \"$username\" , 
-                                      \"Cleartext-Password\" , 
-                                      \":=\" ,\"$password\")");
-          
-                $radreply = mysqli_query($connectdb, "INSERT INTO radreply(
-                                      username,
-                                      attribute,
-                                      op,
-                                      value) 
-                                    VALUES (
-                                      \"$username\", 
-                                      \"Framed-Address\", 
-                                      \":=\" ,
-                                      \"$randaddress\")");
+                                    \"$userloginid\",
+                                    \"$randaddress\",
+                                    \"$randpooid\")") ; 
         
                 $available_childpool = mysqli_query($connectdb, "SELECT available 
                                         FROM ng_childpool 
@@ -439,17 +424,8 @@ function rdpass($n) {
                 $update_available = mysqli_query($connectdb, "UPDATE ng_childpool 
                                         SET available = ".$getavailable['available']." - 1 
                                         WHERE id = \"$randpooid\"");
-
-                $ng_usedpool = mysqli_query($connectdb, "INSERT INTO ng_usedpool (
-                                        poolid,
-                                        address,
-                                        username)
-                                      VALUES (
-                                      \"$randpooid\", 
-                                      \"$randaddress\", 
-                                      \"$username\")");
             
-                verifikasiEmail($firstname,$lastname,$username,$email);
+                verifikasiEmail($firstname,$lastname,$username,$email); 
 
               }else{ //jika gambar gagal diupload
                            echo '<script language="javascript">alert("Foto gagal diupload")</script>';

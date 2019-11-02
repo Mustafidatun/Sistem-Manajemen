@@ -25,9 +25,10 @@ if (isset($_GET['id'])) {
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>AdminLTE 3 | General Form Elements</title>
+  <title>Admin CMS</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="images/logo_cms.jpg" type="image/ico" />
 
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.css">
@@ -55,8 +56,6 @@ if (isset($_GET['id'])) {
           include 'include/sidebar_manager.php';
         }else if($_SESSION['level'] == 2){
           include 'include/sidebar_submanager.php';
-        }else if($_SESSION['level'] == 5){
-          include './include/sidebar_fieldtec.php';
         }else if($_SESSION['level'] == 10){
           include './include/sidebar_finance.php';
         }else if($_SESSION['level'] == 11){
@@ -74,12 +73,12 @@ if (isset($_GET['id'])) {
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Manager Registration</h1>
+            <h1>Node Edit</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Manager Registration</li>
+              <li class="breadcrumb-item"><a href="index.php">Home</a></li>
+              <li class="breadcrumb-item active">Node Edit</li>
             </ol>
           </div>
         </div>
@@ -92,7 +91,7 @@ if (isset($_GET['id'])) {
             <!-- general form elements -->
             <div class="card card-primary">
               <div class="card-header">
-                <h3 class="card-title">Form</h3>
+                <h3 class="card-title">Form Node Edit</h3>
               </div>
               <!-- /.card-header -->
               <!-- form start -->
@@ -101,12 +100,12 @@ if (isset($_GET['id'])) {
                   <div class="form-group">
                     <label for="inputNode">Node Name</label>
                     <input type="hidden" id="oldnodename" name="oldnodename" value="<?php echo $dtnodelist['node']; ?>">
-                    <input type="text" class="form-control" id="inputNodeName" placeholder="Input Node Name" name="nodename" value="<?php echo $dtnodelist['node']; ?>">
+                    <input type="text" class="form-control" id="inputNodeName" placeholder="Input Node Name" name="nodename" value="<?php echo $dtnodelist['node']; ?>" required>
                   </div>
                   <div class="form-group">
                     <label for="inputAddress">Node IP Address</label>
                     <input type="hidden" id="oldaddress" name="oldaddress" value="<?php echo $dtnodelist['address']; ?>">
-                    <input type="text" class="form-control" id="inputAddress" placeholder="Input Node IP Address" name="address" value="<?php echo $dtnodelist['address']; ?>">
+                    <input type="text" class="form-control" id="inputAddress" placeholder="Input Node IP Address" name="address" value="<?php echo $dtnodelist['address']; ?>" required>
                   </div>
                   <div class="form-group">
                     <label for="inputKota">Kota</label>
@@ -114,15 +113,15 @@ if (isset($_GET['id'])) {
                   </div>
                   <div class="form-group">
                     <label for="inputSecret">Secret</label>
-                    <input type="text" class="form-control" id="inputSecret" placeholder="Input Node Secret" name="secret" value="<?php echo $dtnodelist['secret']; ?>">
+                    <input type="text" class="form-control" id="inputSecret" placeholder="Input Node Secret" name="secret" value="<?php echo $dtnodelist['secret']; ?>" required>
                   </div>
                   <div class="form-group">
                     <label for="inputType">Type</label>
-                    <input type="text" class="form-control" id="inputType" placeholder="Mikrotik" name="type" value="<?php echo $dtnodelist['type']; ?>">
+                    <input type="text" class="form-control" id="inputType" placeholder="Mikrotik" name="type" value="<?php echo $dtnodelist['type']; ?>" required>
                   </div>
                   <div class="form-group">
                     <label for="inputPort">Port</label>
-                    <input type="text" class="form-control" id="inputPort" placeholder="3799" name="port"  value="<?php echo $dtnodelist['port']; ?>">
+                    <input type="text" class="form-control" id="inputPort" placeholder="3799" name="port"  value="<?php echo $dtnodelist['port']; ?>" required>
                   </div>
                   <div class="form-group">
                     <label for="inputPool">Pool</label>

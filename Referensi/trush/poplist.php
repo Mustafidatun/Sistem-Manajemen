@@ -2,26 +2,8 @@
 include "database/koneksi.php";
 include "database/check.php";
 
-$managerid = $_SESSION['managerid'];
-if($_SESSION['level'] == 1){
-  $submanager = mysqli_query($connectdb, "SELECT ng_submanager.id,
-                                                  ng_submanager.username AS username_submanager, 
-                                                  ng_submanager.password, 
-                                                  ng_submanager.email 
-                                          FROM ng_submanager
-                                          INNER JOIN ng_manager ON ng_manager.id = ng_submanager.managerid
-                                          WHERE ng_manager.id = \"$managerid\"");
-  
-}else if($_SESSION['level'] == 0){
-  $submanager = mysqli_query($connectdb, "SELECT ng_submanager.id,
-                                                  ng_submanager.username AS username_submanager, 
-                                                  ng_submanager.password, 
-                                                  ng_submanager.email,
-                                                  ng_manager.username AS username_manager
-                                          FROM ng_submanager
-                                          INNER JOIN ng_manager ON ng_manager.id = ng_submanager.managerid"
-                                );
-}
+$pop = mysqli_query($connectdb, "SELECT * FROM ng_pop");
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -31,6 +13,7 @@ if($_SESSION['level'] == 1){
   <title>AdminLTE 3 | DataTables</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="images/logo_cms.jpg" type="image/ico" />
 
 <!-- Font Awesome Icons -->
   <script src="https://kit.fontawesome.com/bd16c6b546.js"></script>
@@ -107,36 +90,20 @@ if($_SESSION['level'] == 1){
             <div class="card-body">
               <table id="example1" class="table table-bordered table-striped">
                 <thead>
-                <tr>
-                  <th>Username</th>
-                  <th>Password</th>
-                  <th>Email</th>
-                  <?php if($_SESSION['level'] == 0) echo "<th>Manager</th>"; ?>
-                  <th>Up Level</th>
-                </tr>
+                  <tr>
+                    <th>Ap Name</th>
+                    <th>Ap Lat</th>
+                    <th>Ap Long</th>
+                  </tr>
                 </thead>
                 <tbody>
-                  <?php while ($dtsubmanager = mysqli_fetch_assoc($submanager)){?>
-                  <tr>
-                    <td><?php echo $dtsubmanager['username_submanager']; ?></td>
-                    <td><?php echo $dtsubmanager['password']; ?></td>
-                    <td><?php echo $dtsubmanager['email']; ?></td>
-                    <?php if($_SESSION['level'] == 0) 
-                              echo "<td> $dtsubmanager[username_manager] </td>"; 
-                    ?>
-                    <td><form action="" method=post>
-                          <input id="submanagerid" name="submanagerid" type="hidden" value="<?php echo $dtsubmanager['id']; ?>">
-                          <select id="level" type="option" class="form-control col-md-7 col-xs-12" name="level" required>
-                              <option value='1'>Manager</option>
-                              <option value='10'>Finance</option>
-                              <option value='11'>Purchasing</option>
-                          </select>
-                          <button id="send" type="submit" class="btn btn-success">Submit</button>                                    
-                        </form>
-                    </td>
-                  </tr>
-
-                <?php } ?>
+                  <?php while ($dtpop = mysqli_fetch_assoc($pop)){?>
+                    <tr>
+                      <td><?php echo $dtpop['apname']; ?></td>
+                      <td><?php echo $dtpop['aplat']; ?></td>
+                      <td><?php echo $dtpop['aplong']; ?></td>
+                    </tr>
+                  <?php } ?>
                 </tbody>
               </table>
             </div>
@@ -187,21 +154,3 @@ if($_SESSION['level'] == 1){
 </script>
 </body>
 </html>
-<?php
-        if($_SERVER["REQUEST_METHOD"] == "POST") {
-            $submanagerid = $_POST['submanagerid'];
-            $submanager = mysqli_query($connectdb, "SELECT ng_submanager.*, ng_userlogin.id AS userloginid FROM ng_submanager 
-                                                    INNER JOIN ng_userlogin ON ng_userlogin.managerid = ng_submanager.id
-                                                    WHERE ng_submanager.id = \"$submanagerid\"");
-            $showsubmanager = mysqli_fetch_assoc($submanager);
-            $userloginid = $showsubmanager['userloginid'];
-            $username = $showsubmanager['username'];
-            $password = $showsubmanager['password'];
-            $email = $showsubmanager['email'];
-            $foto = $showsubmanager['foto'];
-            $level = $_POST['level'];
-
-            $assigmentlevel =  mysqli_query($connectdb, "CALL spAssigmentLevel(\"$userloginid\",\"$submanagerid\",\"$username\",\"$password\",\"$email\",\"$foto\",\"$level\")");
-          echo("<meta http-equiv='refresh' content='1'>"); //Refresh by HTTP META 
-        }
-?>

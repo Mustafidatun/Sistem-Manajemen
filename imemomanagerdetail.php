@@ -2,11 +2,12 @@
 include "database/koneksi.php";
 include "database/check.php";
 
-$userid = $_SESSION['userid'];
+$userloginid = $_SESSION['userloginid'];
 if($_GET['memoid'] <> "" || $_GET['vendor'] <> "" || $_GET['date'] <> ""){
 $memoid = $_GET['memoid'];
 $vendor = $_GET['vendor'];
 $date = $_GET['date'];
+$purchase = $_GET['purchase'];
 
 $memolist = mysqli_query($connectdb, "SELECT ng_internalmemo.id AS im_id, 
                                             ng_equipmaster.id AS equipmasterid, 
@@ -33,9 +34,10 @@ $memolist = mysqli_query($connectdb, "SELECT ng_internalmemo.id AS im_id,
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>AdminLTE 3 | DataTables</title>
+  <title>Admin CMS</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="images/logo_cms.jpg" type="image/ico" />
 
 <!-- Font Awesome Icons -->
   <script src="https://kit.fontawesome.com/bd16c6b546.js"></script>
@@ -67,8 +69,6 @@ $memolist = mysqli_query($connectdb, "SELECT ng_internalmemo.id AS im_id,
           include 'include/sidebar_manager.php';
         }else if($_SESSION['level'] == 2){
           include 'include/sidebar_submanager.php';
-        }else if($_SESSION['level'] == 5){
-          include './include/sidebar_fieldtec.php';
         }else if($_SESSION['level'] == 10){
           include './include/sidebar_finance.php';
         }else if($_SESSION['level'] == 11){
@@ -86,12 +86,12 @@ $memolist = mysqli_query($connectdb, "SELECT ng_internalmemo.id AS im_id,
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>DataTables</h1>
+            <h1>Internal Memo Detail</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">DataTables</li>
+              <li class="breadcrumb-item active">Internal Memo Detail</li>
             </ol>
           </div>
         </div>
@@ -105,27 +105,42 @@ $memolist = mysqli_query($connectdb, "SELECT ng_internalmemo.id AS im_id,
         <div class="col-12">
 
           <div class="card">
-            <div class="card-header">
-              <h3 class="card-title">DataTable with default features</h3>
-            </div>
             <!-- /.card-header -->
-            <div class="card-body">
-              <table>
-            <tr>
-                <td>Memo Id</td>
-                <td> : </td>
-                <td><?php echo $memoid; ?></td>
-            </tr>
-            <tr>
-                <td>Vendor</td>
-                <td> : </td>
-                <td><?php echo $vendor;?></td>
-            </tr>
-            <tr>
-                <td>Date</td>
-                <td> : </td>
-                <td><?php echo date('d F Y', strtotime($date));?></td>
-            </table>
+             <div class="card-body">
+              <div class="col-12 mt-5 mb-5 ml-0">
+                <div class="row">
+                  <div class="col-6">
+                    <div class="col-md-12 ml-auto">
+                      <div class="row">
+                        <p class="col-md-3 font-weight-bold">Memo Id </p>
+                        <p class="col-md-8 p-0"><?php echo $memoid; ?></p>
+                      </div>
+                    </div>
+                    <div class="col-md-12 ml-auto">
+                      <div class="row">
+                        <p class="col-md-3 font-weight-bold">Vendor</p>
+                        <p class="col-md-8 p-0"><?php echo $vendor; ?></p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="col-md-12 ml-auto">
+                      <div class="row">
+                        <p class="col-md-3 font-weight-bold">Date </p>
+                        <p class="col-md-8 p-0"><?php echo date('d F Y', strtotime($date));?></p>
+                      </div>
+                    </div>
+                    <div class="col-md-12 ml-auto">
+                      <div class="row">
+                        <p class="col-md-3 font-weight-bold">Created By </p>
+                        <p class="col-md-8 p-0"><?php echo $purchase; ?></p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              
 
             <form action="#" method="post">   
               <table id="example1" class="table table-bordered table-striped">
@@ -153,10 +168,10 @@ $memolist = mysqli_query($connectdb, "SELECT ng_internalmemo.id AS im_id,
                         <td><?php echo $dtmemo['type']; ?></td>
                         <td><?php echo $dtmemo['merk']; ?></td>
                         <td><?php echo $dtmemo['vendor']; ?></td>
-                        <td><?php echo $dtmemo['price']; ?></td>
+                        <td><?php echo number_format($dtmemo['price']); ?></td>
                         <td><?php echo $dtmemo['quantity']; ?></td>
                         <td><?php echo $dtmemo['vol']; ?></td>
-                        <td><?php echo $dtmemo['subtotal']; ?></td>
+                        <td><?php echo number_format($dtmemo['subtotal']); ?></td>
                         <td>
                             <input type="checkbox" name="inputs[<?php echo $index; ?>][im_id]" value="<?php echo $dtmemo['im_id']; ?>" checked>
                         </td>
@@ -176,12 +191,14 @@ $memolist = mysqli_query($connectdb, "SELECT ng_internalmemo.id AS im_id,
                         <td></td>
                         <td></td>
                         <td>Total</td>
-                        <td><?php echo $total; ?></td>
+                        <td><?php echo number_format($total); ?></td>
                     </tr>
                 </tfoot>
             </table>
-            <div class="form-group">  
-                <button id="send" class="btn btn-primary btn-sm" type="submit">Submit</button>  
+            <div class="form-group"> 
+              <div class="col-md-6 mt-1 mb-5"> 
+                <button id="send" class="btn btn-primary btn-sm" type="submit">Approve</button>
+              </div>  
             </div>
 
         </form>
@@ -253,7 +270,7 @@ $memolist = mysqli_query($connectdb, "SELECT ng_internalmemo.id AS im_id,
                     $equipmasterid = $dtim['equipmasterid'];
                     $price = $dtim['price'];
 
-                    $update_internalmemo = mysqli_query($connectdb, "UPDATE ng_internalmemo SET status = \"1\", approve_date = DATE(NOW()), userid = \"$userid\" WHERE id = \"$im_id\"");
+                    $update_internalmemo = mysqli_query($connectdb, "UPDATE ng_internalmemo SET status = \"1\", approve_date = DATE(NOW()), userid = \"$userloginid\" WHERE id = \"$im_id\"");
 
                     $checkprice = mysqli_query($connectdb, "SELECT price FROM ng_equipmaster 
                                                             WHERE ng_equipmaster.id = \"$equipmasterid\" AND price NOT IN ( 
@@ -265,7 +282,7 @@ $memolist = mysqli_query($connectdb, "SELECT ng_internalmemo.id AS im_id,
 
                     $ng_po = mysqli_query($connectdb, "INSERT INTO ng_purchaseorder(internalmemoid, poid) VALUES (\"$im_id\", \"$poid\")") ; 
 
-                    // $approval_internalmemo = mysqli_query($connectdb, "CALL spApprovalInternalMemo(\"$userid\",\"$im_id\")");
+                    // $approval_internalmemo = mysqli_query($connectdb, "CALL spApprovalInternalMemo(\"$userloginid\",\"$im_id\")");
                 }
 
                 echo("<meta http-equiv='refresh' content='0' url='imemomanager.php'>"); //Refresh by HTTP META 
