@@ -102,12 +102,12 @@ $customerinvoicelist = mysqli_query($connectdb, "SELECT ng_customer.id AS custom
                       <label class="control-label col-md-3 col-sm-3 col-xs-12" for="file_csv">CSV File </label> 
                       <div class="col-md-12 col-sm-12 col-xs-12">
                         <div class="input-group">
-                          <input id="uploadfilecsv" type="text" class="form-control" placeholder="Choose File...">
+                          <input id="uploadfilecsv" name="uploadfilecsv" type="text" class="form-control" readonly="readonly" placeholder="Choose File...">
                           <span class="input-group-btn">
                             <div class="imageupload">
                               <label class="btn btn-default btn-file">
                                 <span>Upload</span>
-                                <input id="uploadbtncsv" type="file" name="file_csv" accept=".csv" class="form-control col-md-7 col-xs-12">
+                                <input id="uploadbtncsv" type="file" name="file_csv" accept=".csv" class="form-control col-md-7 col-xs-12" onchange="this.form.uploadfilecsv.value=this.files.length?this.files[0].name:''">
                               </label>
                             </div>
                           </span>
@@ -118,12 +118,12 @@ $customerinvoicelist = mysqli_query($connectdb, "SELECT ng_customer.id AS custom
                     <label class="control-label col-md-3 col-sm-3 col-xs-12" for="file_excel">Excel File </label> 
                       <div class="col-md-12 col-sm-12 col-xs-12">
                         <div class="input-group">
-                          <input id="uploadfileexcel" type="text" class="form-control" readonly="readonly" placeholder="Choose File...">
+                          <input id="uploadfileexcel" name="uploadfileexcel" type="text" class="form-control" readonly="readonly" placeholder="Choose File...">
                           <span class="input-group-btn">
                             <div class="imageupload">
                               <label class="btn btn-default btn-file">
                                 <span>Upload</span>
-                                <input id="uploadbtnexcel" type="file" name="file_excel" accept=".xls" class="form-control col-md-7 col-xs-12">
+                                <input id="uploadbtnexcel" type="file" name="file_excel" accept=".xls" class="form-control col-md-7 col-xs-12" onchange="this.form.uploadfileexcel.value=this.files.length?this.files[0].name:''">
                               </label>
                             </div>
                           </span>
@@ -138,7 +138,7 @@ $customerinvoicelist = mysqli_query($connectdb, "SELECT ng_customer.id AS custom
                   </div> 
                 </form>
                 <div class="col-md-12 pt-3 pb-3 mr-auto">
-                    <button id="send" type="submit" onclick="location.href = 'customer_invoiceproses.php'" class="btn btn-success">Create Ammount</button>
+                    <button id="send" type="submit" onclick="location.href = 'customer_invoiceproses.php'" class="btn btn-success">Generate Invoice</button>
                 </div>
               <table id="example1" class="table table-bordered table-striped">
                 <thead>
