@@ -1,5 +1,5 @@
 <?php
-$host="localhost"; // Host name 
+$host="localhost:32771"; // Host name 
 $username="root"; // Mysql username 
 $password=""; // Mysql password 
 $db_name="admincms"; // Database name
